@@ -2,10 +2,14 @@
 Module for reading pen and ink data from an ODS spreadsheet.
 """
 
+import logging
 import xml.etree.ElementTree as ET
 import zipfile
 from dataclasses import dataclass
 from typing import Dict, List
+
+# set up module logger
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -49,6 +53,7 @@ class DataReader:
         Parse the ODS and return raw rows as dicts.
         Each dict has keys: type, brand, name, details, color.
         """
+        logger.debug(f"Reading ODS file: {self.filepath}")
         root = self._get_content_xml()
         ns = {
             "table": "urn:oasis:names:tc:opendocument:xmlns:table:1.0",
@@ -57,6 +62,7 @@ class DataReader:
         raw_rows: List[Dict[str, str]] = []
         table = root.find(".//table:table", ns)
         if table is None:
+            logger.warning("No table found in ODS content.xml")
             return raw_rows
         # Define column keys for mapping
         keys = ["type", "brand", "name", "details", "color"]
@@ -70,6 +76,7 @@ class DataReader:
                 continue
             # Map first five columns to dict
             row_dict = dict(zip(keys, texts[: len(keys)]))
+            logger.debug(f"Parsed row: {row_dict}")
             raw_rows.append(row_dict)
         return raw_rows
 
@@ -77,6 +84,7 @@ class DataReader:
         """
         Create FountainPen objects from raw data rows.
         """
+        logger.debug(f"Creating pens from {len(raw_rows)} rows")
         pens: List[FountainPen] = []
         for row in raw_rows:
             if row.get("type", "").strip().lower() == "pen":
@@ -94,6 +102,7 @@ class DataReader:
         """
         Create Ink objects from raw data rows.
         """
+        logger.debug(f"Creating inks from {len(raw_rows)} rows")
         inks: List[Ink] = []
         for row in raw_rows:
             if row.get("type", "").strip().lower() == "ink":
@@ -120,7 +129,12 @@ class DataReader:
         Convenience method: read raw data, create pen and ink objects,
         and pair them into PenSetup instances.
         """
+        logger.debug(
+            "Loading setups: read -> create_pens -> create_inks -> create_setups"
+        )
         raw_rows = self.read()
         pens = self.create_pens(raw_rows)
         inks = self.create_inks(raw_rows)
-        return self.create_setups(pens, inks)
+        setups = self.create_setups(pens, inks)
+        logger.info(f"Loaded {len(setups)} pen setups")
+        return setups

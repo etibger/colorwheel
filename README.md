@@ -39,9 +39,16 @@ pip install .
 ## Usage
 Run the generator script:
 ```bash
-python main.py
+python main.py [-o OUTPUT_FILE] [-v] [--use-data] [--data-file PATH]
 ```
-The output file (`color_wheel_with_legend.png`) will be created in the current directory.
+Options:
+- `-o, --output` : output filename (default: `color_wheel_with_legend.png`)
+- `-v, --verbose`: enable verbose logging to console and file (`colorwheel.log`)
+- `--use-data`   : use colors from the ODS data file instead of defaults
+- `--data-file` : path to the ODS data file (default: `data/tinta_szinek.ods`)
+Options:
+- `-o, --output` : set the output filename (default: `color_wheel_with_legend.png`)
+- `-v, --verbose`: enable verbose logging to console and `colorwheel.log`
 
 ## Configuration
 At the top of `main.py`, adjust constants to modify the output:
