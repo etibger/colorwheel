@@ -106,8 +106,8 @@ def main():
     if args.use_data:
         logging.info(f"Loading colors from data file: {args.data_file}")
         reader = DataReader(args.data_file)
-        setups = reader.load_setups()
-        marker_colors = [setup.ink.color for setup in setups]
+        # setups = reader.load_setups()
+        marker_colors = [ink.color_rgb_hex for ink in reader.inks]
         logging.info(f"Using {len(marker_colors)} colors from data")
     else:
         marker_colors = HEX_COLORS
