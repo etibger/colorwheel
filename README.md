@@ -60,16 +60,24 @@ At the top of `main.py`, adjust constants to modify the output:
 
 ## Data Integration
 The `data/tinta_szinek.ods` file contains pen and ink definitions.
-Use the `data_reader.py` module to load setups:
+Use the `data_reader.py` module to load detailed setups:
 
 ```python
 from data_reader import DataReader
 
+# initialize reader (parses and builds objects)
 reader = DataReader('data/tinta_szinek.ods')
-# load all setups at once
-setups = reader.load_setups()
-for setup in setups:
-    print(f"{setup.pen.brand} {setup.pen.name} → {setup.ink.brand} {setup.ink.name}")
+# raw rows, pens, inks, and setups are available as attributes
+print(reader.raw_rows)        # List[Dict[str,str]]
+print(reader.pens)            # List[FountainPen]
+print(reader.inks)            # List[Ink]
+print(reader.setups)          # List[PenSetup]
+
+# or directly iterate pen setups:
+for setup in reader.setups:
+    pen = setup.pen
+    ink = setup.ink
+    print(f"{pen.brand} {pen.name} ({pen.nib_size}) → {ink.name} [{ink.color_rgb_hex}]")
 ```
 
 ## Development
