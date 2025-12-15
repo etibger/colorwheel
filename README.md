@@ -73,9 +73,13 @@ for setup in setups:
    ```
 2. Install dev dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -e .[dev]
    ```
-3. Lint with [flake8]:
+3. Run tests with pytest:
+   ```bash
+   pytest
+   ```
+4. Lint with [flake8]:
    ```bash
    flake8
    ```
