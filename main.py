@@ -47,7 +47,8 @@ def rgb_to_hsv(rgb):
 def hsv_to_xy(h, s):
     """
     Map hue (angle) and saturation (radius fraction) to (x,y) coordinates on the wheel.
-    Uses polar-to-Cartesian conversion: https://en.wikipedia.org/wiki/Polar_coordinate_system
+    Uses polar-to-Cartesian conversion:
+    https://en.wikipedia.org/wiki/Polar_coordinate_system
     h: hue fraction [0,1], s: saturation fraction [0,1]
     """
     angle = 2 * math.pi * h
@@ -107,7 +108,7 @@ def main():
         logging.info(f"Loading colors from data file: {args.data_file}")
         reader = DataReader(args.data_file)
         # setups = reader.load_setups()
-        # REVISIT 
+        # REVISIT
         marker_colors = [ink.color_rgb_hex for ink in reader.inks]
         logging.info(f"Using {len(marker_colors)} colors from data")
     else:

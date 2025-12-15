@@ -10,5 +10,4 @@ wheels/
 .venv
 
 # Generated files
-color_wheel_with_legend.png
 colorwheel.log

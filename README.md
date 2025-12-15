@@ -9,7 +9,7 @@ and a side legend detailing each color.
 
 - Smooth HSV-based color wheel rendering
 - Numbered markers for specified hex colors
-- Legend with color swatches, hex codes, and RGB values
+- Legend with color swatches, name of the ink
 - Configurable canvas dimensions, marker size, and output filename
 
 ## Table of Contents
@@ -47,8 +47,6 @@ Options:
 - `--use-data`   : use colors from the ODS data file instead of defaults
 - `--data-file` : path to the ODS data file (default: `data/tinta_szinek.ods`)
 Options:
-- `-o, --output` : set the output filename (default: `color_wheel_with_legend.png`)
-- `-v, --verbose`: enable verbose logging to console and `colorwheel.log`
 
 ## Configuration
 At the top of `main.py`, adjust constants to modify the output:
