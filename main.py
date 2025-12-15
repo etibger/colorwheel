@@ -107,6 +107,7 @@ def main():
         logging.info(f"Loading colors from data file: {args.data_file}")
         reader = DataReader(args.data_file)
         # setups = reader.load_setups()
+        # REVISIT 
         marker_colors = [ink.color_rgb_hex for ink in reader.inks]
         logging.info(f"Using {len(marker_colors)} colors from data")
     else:
@@ -144,6 +145,7 @@ def main():
     # ==========================
     marker_positions = []
 
+    # get a proper unique identifier, rather then the place in a list
     for idx, hex_color in enumerate(marker_colors, start=1):
         rgb = hex_to_rgb(hex_color)
         h, s, _ = rgb_to_hsv(rgb)
@@ -178,7 +180,7 @@ def main():
     legend_y = 30
     line_height = 30
 
-    draw.text((legend_x, legend_y - 25), "Legend", fill="black", font=font_bold)
+    draw.text((legend_x, legend_y - 25), "Ink Names", fill="black", font=font_bold)
 
     for i, hex_color, rgb, _, _ in marker_positions:
         y_pos = legend_y + (i - 1) * line_height
@@ -191,7 +193,8 @@ def main():
         # Legend text
         draw.text(
             (legend_x + 30, y_pos),
-            f"{i}: {hex_color}  RGB{rgb}",
+            # REVISIT, don't depend on the idx being the same as the place in a list.
+            f"{i} : {reader.inks[i - 1].name}",
             fill="black",
             font=font,
         )
