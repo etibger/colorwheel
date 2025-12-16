@@ -28,16 +28,10 @@ and a side legend detailing each color.
 
 ## Installation
 
-Ensure you have Python 3.14+ installed. Then install the Pillow dependency:
+Ensure you have Python 3.14+ installed. Then install all dependencies via `uv`:
 
 ```bash
-pip install pillow
-```
-
-Optionally, install this package locally:
-
-```bash
-pip install .
+uv install
 ```
 
 ## Usage
@@ -45,7 +39,7 @@ pip install .
 Run the generator script:
 
 ```bash
-python main.py [-o OUTPUT_FILE] [-v] [--use-data] [--data-file PATH]
+uv run main.py [-o OUTPUT_FILE] [-v] [--use-data] [--data-file PATH]
 ```
 
 Options:
@@ -97,22 +91,17 @@ for setup in reader.setups:
 
 ## Development
 
-1. Create and activate a virtual environment:
+1. Install development dependencies (including dev extras):
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate
+   uv install --dev
    ```
-2. Install dev dependencies:
+2. Run tests:
    ```bash
-   pip install -e .[dev]
+   uv run pytest
    ```
-3. Run tests with pytest:
+3. Lint code:
    ```bash
-   pytest
-   ```
-4. Lint with [flake8]:
-   ```bash
-   flake8
+   uv run flake8
    ```
 
 ## License

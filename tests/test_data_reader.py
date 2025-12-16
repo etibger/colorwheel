@@ -20,6 +20,7 @@ def sample_ods(tmp_path):
         <table:table-row>
           <table:table-cell><text:p>Pen Brand</text:p></table:table-cell>
           <table:table-cell><text:p>Pen Name</text:p></table:table-cell>
+          <table:table-cell><text:p>Pen Body Color</text:p></table:table-cell>
           <table:table-cell><text:p>Nib Size</text:p></table:table-cell>
           <table:table-cell><text:p>Ink Brand</text:p></table:table-cell>
           <table:table-cell><text:p>Color Name</text:p></table:table-cell>
@@ -32,6 +33,7 @@ def sample_ods(tmp_path):
         <table:table-row>
           <table:table-cell><text:p>Parker</text:p></table:table-cell>
           <table:table-cell><text:p>51</text:p></table:table-cell>
+          <table:table-cell><text:p>Purple</text:p></table:table-cell>
           <table:table-cell><text:p>Fine</text:p></table:table-cell>
           <table:table-cell><text:p>Parker</text:p></table:table-cell>
           <table:table-cell><text:p>Quink</text:p></table:table-cell>
@@ -61,6 +63,7 @@ def test_read_returns_dicts(sample_ods):
     keys = [
         "pen_brand",
         "pen_name",
+        "pen_body_color",
         "nib_size",
         "ink_brand",
         "color_name",
