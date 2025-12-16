@@ -1,0 +1,16 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-golden
+        name: Check generated image matches golden
+        entry: scripts/check_golden.sh
+        language: script
+        stages: [pre-commit]
+        always_run: true
+      - id: pytest
+        name: Run pytest
+        entry: uv run pytest
+        language: system
+        stages: [pre-commit]
+        pass_filenames: false
+        always_run: true

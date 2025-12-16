@@ -103,6 +103,15 @@ for setup in reader.setups:
    ```bash
    uv run flake8
    ```
+4. Set up Git pre-commit hooks:
+   ```bash
+   # Add pre-commit to dev dependencies
+   uv add pre-commit --dev
+   # Install the git hook scripts
+   uv run pre-commit install
+   # (Optional) Verify all files against hooks
+   uv run pre-commit run --all-files
+   ```
 
 ## License
 
