@@ -19,7 +19,15 @@ IMAGE_SIZE = (WHEEL_SIZE + LEGEND_WIDTH, WHEEL_SIZE)
 RADIUS = WHEEL_SIZE // 2
 CENTER = (RADIUS, RADIUS)
 MARKER_RADIUS = 6
-HEX_COLORS = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
+# default list of (color_name, hex) for manual markers
+HEX_COLORS = [
+    ("Red", "#FF0000"),
+    ("Green", "#00FF00"),
+    ("Blue", "#0000FF"),
+    ("Yellow", "#FFFF00"),
+    ("Magenta", "#FF00FF"),
+    ("Cyan", "#00FFFF"),
+]
 OUTPUT_FILE = "color_wheel_with_legend.png"
 
 
@@ -72,10 +80,10 @@ def main():
     if args.use_data:
         logging.info(f"Loading colors from data file: {args.data_file}")
         reader = DataReader(args.data_file)
-        # prepare ink list to preserve order
+        # prepare ink list to preserve order and include names
         ink_list = list(reader.inks.values())
-        # marker colors from ink entries
-        marker_colors = [ink.color_rgb_hex for ink in ink_list]
+        # marker colors as (name, hex)
+        marker_colors = [(ink.name, ink.color_rgb_hex) for ink in ink_list]
         logging.info(f"Using {len(marker_colors)} colors from data")
     else:
         marker_colors = HEX_COLORS
@@ -95,6 +103,9 @@ def main():
     # ==========================
     # DRAW COLOR WHEEL
     # ==========================
+    # Fill each pixel within the circle by mapping its position to HSV
+    # coordinates (hue from angle, saturation from radius) and converting
+    # to RGB for the color wheel background.
     for y in range(WHEEL_SIZE):
         for x in range(WHEEL_SIZE):
             dx = x - CENTER[0]
@@ -113,12 +124,12 @@ def main():
     marker_positions = []
 
     # get a proper unique identifier, rather then the place in a list
-    for idx, hex_color in enumerate(marker_colors, start=1):
+    for idx, (name, hex_color) in enumerate(marker_colors, start=1):
+        # convert hex to RGB, then to HSV position
         rgb = hex_to_rgb(hex_color)
         h, s, _ = rgb_to_hsv(rgb)
         x, y = hsv_to_xy(h, s, RADIUS, CENTER)
-
-        marker_positions.append((idx, hex_color, rgb, x, y))
+        marker_positions.append((idx, name, hex_color, rgb, x, y))
 
         # Marker circle
         draw.ellipse(
@@ -149,7 +160,7 @@ def main():
 
     draw.text((legend_x, legend_y - 25), "Ink Names", fill="black", font=font_bold)
 
-    for i, hex_color, rgb, _, _ in marker_positions:
+    for i, name, hex_color, rgb, _, _ in marker_positions:
         y_pos = legend_y + (i - 1) * line_height
 
         # Color swatch
@@ -160,8 +171,7 @@ def main():
         # Legend text
         draw.text(
             (legend_x + 30, y_pos),
-            # lookup ink name from ordered ink_list
-            f"{i} : {ink_list[i - 1].name}",
+            f"{i} : {name}",
             fill="black",
             font=font,
         )

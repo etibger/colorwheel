@@ -62,7 +62,7 @@ At the top of `main.py`, adjust constants to modify the output:
 
 - `WHEEL_SIZE` (int): diameter of the wheel in pixels
 - `LEGEND_WIDTH` (int): width of the legend panel
-- `HEX_COLORS` (list of str): hex codes to mark on the wheel
+- `HEX_COLORS` (list of tuples): pairs of color name and hex code to mark on the wheel (e.g., `("Red", "#FF0000")`)
 - `MARKER_RADIUS` (int): radius of each marker dot
 - `OUTPUT_FILE` (str): name of the saved image
 
