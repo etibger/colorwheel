@@ -6,6 +6,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
+from color_utils import hex_to_rgb, hsv_to_xy, rgb_to_hsv
 from data_reader import DataReader
 
 # ==========================
@@ -20,42 +21,6 @@ CENTER = (RADIUS, RADIUS)
 MARKER_RADIUS = 6
 HEX_COLORS = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"]
 OUTPUT_FILE = "color_wheel_with_legend.png"
-
-# ==========================
-# HELPERS
-# ==========================
-
-
-def hex_to_rgb(hex_color):
-    """
-    Convert a hex color string (e.g., '#RRGGBB') to an RGB tuple.
-    Wikipeda: https://en.wikipedia.org/wiki/Web_colors#Hex_triplet
-    """
-    hex_color = hex_color.lstrip("#")
-    return tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
-
-
-def rgb_to_hsv(rgb):
-    """
-    Convert an RGB tuple (0-255) to HSV components scaled [0,1].
-    See: https://en.wikipedia.org/wiki/HSL_and_HSV#From_RGB
-    """
-    r, g, b = [x / 255.0 for x in rgb]
-    return colorsys.rgb_to_hsv(r, g, b)
-
-
-def hsv_to_xy(h, s):
-    """
-    Map hue (angle) and saturation (radius fraction) to (x,y) coordinates on the wheel.
-    Uses polar-to-Cartesian conversion:
-    https://en.wikipedia.org/wiki/Polar_coordinate_system
-    h: hue fraction [0,1], s: saturation fraction [0,1]
-    """
-    angle = 2 * math.pi * h
-    r = s * RADIUS
-    x = CENTER[0] + r * math.cos(angle)
-    y = CENTER[1] + r * math.sin(angle)
-    return int(x), int(y)
 
 
 # ==========================
@@ -151,7 +116,7 @@ def main():
     for idx, hex_color in enumerate(marker_colors, start=1):
         rgb = hex_to_rgb(hex_color)
         h, s, _ = rgb_to_hsv(rgb)
-        x, y = hsv_to_xy(h, s)
+        x, y = hsv_to_xy(h, s, RADIUS, CENTER)
 
         marker_positions.append((idx, hex_color, rgb, x, y))
 
