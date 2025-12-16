@@ -27,29 +27,39 @@ and a side legend detailing each color.
 <img src="color_wheel_with_legend.png" alt="Generated Color Wheel" width="600" />
 
 ## Installation
+
 Ensure you have Python 3.14+ installed. Then install the Pillow dependency:
+
 ```bash
 pip install pillow
 ```
+
 Optionally, install this package locally:
+
 ```bash
 pip install .
 ```
 
 ## Usage
+
 Run the generator script:
+
 ```bash
 python main.py [-o OUTPUT_FILE] [-v] [--use-data] [--data-file PATH]
 ```
-Options:
-- `-o, --output` : output filename (default: `color_wheel_with_legend.png`)
-- `-v, --verbose`: enable verbose logging to console and file (`colorwheel.log`)
-- `--use-data`   : use colors from the ODS data file instead of defaults
-- `--data-file` : path to the ODS data file (default: `data/tinta_szinek.ods`)
+
 Options:
 
+- `-o, --output` : output filename (default: `color_wheel_with_legend.png`)
+- `-v, --verbose`: enable verbose logging to console and file (`colorwheel.log`)
+- `--use-data` : use colors from the ODS data file instead of defaults
+- `--data-file` : path to the ODS data file (default: `data/tinta_szinek.ods`)
+  Options:
+
 ## Configuration
+
 At the top of `main.py`, adjust constants to modify the output:
+
 - `WHEEL_SIZE` (int): diameter of the wheel in pixels
 - `LEGEND_WIDTH` (int): width of the legend panel
 - `HEX_COLORS` (list of str): hex codes to mark on the wheel
@@ -57,8 +67,12 @@ At the top of `main.py`, adjust constants to modify the output:
 - `OUTPUT_FILE` (str): name of the saved image
 
 ## Data Integration
+
 The `data/tinta_szinek.ods` file contains pen and ink definitions.
-Use the `data_reader.py` module to load detailed setups:
+Use the `data_reader.py` module to load detailed setups. It now returns dictionaries keyed by each item's SHA-256-based `id`:
+
+Note that each `FountainPen`, `Ink`, and `PenSetup` now includes an `id` attribute
+generated as a SHA-256 hash of its key fields.
 
 ```python
 from data_reader import DataReader
@@ -67,9 +81,12 @@ from data_reader import DataReader
 reader = DataReader('data/tinta_szinek.ods')
 # raw rows, pens, inks, and setups are available as attributes
 print(reader.raw_rows)        # List[Dict[str,str]]
-print(reader.pens)            # List[FountainPen]
-print(reader.inks)            # List[Ink]
-print(reader.setups)          # List[PenSetup]
+# pens: Dict[id, FountainPen]
+print(reader.pens)            # Dict of pen_id → FountainPen
+# inks: Dict[id, Ink]
+print(reader.inks)            # Dict of ink_id → Ink
+# setups: Dict[id, PenSetup]
+print(reader.setups)          # Dict of setup_id → PenSetup
 
 # or directly iterate pen setups:
 for setup in reader.setups:
@@ -79,6 +96,7 @@ for setup in reader.setups:
 ```
 
 ## Development
+
 1. Create and activate a virtual environment:
    ```bash
    python -m venv .venv
@@ -98,4 +116,5 @@ for setup in reader.setups:
    ```
 
 ## License
+
 This project is released under the MIT License.

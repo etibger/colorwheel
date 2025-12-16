@@ -107,9 +107,10 @@ def main():
     if args.use_data:
         logging.info(f"Loading colors from data file: {args.data_file}")
         reader = DataReader(args.data_file)
-        # setups = reader.load_setups()
-        # REVISIT
-        marker_colors = [ink.color_rgb_hex for ink in reader.inks]
+        # prepare ink list to preserve order
+        ink_list = list(reader.inks.values())
+        # marker colors from ink entries
+        marker_colors = [ink.color_rgb_hex for ink in ink_list]
         logging.info(f"Using {len(marker_colors)} colors from data")
     else:
         marker_colors = HEX_COLORS
@@ -194,8 +195,8 @@ def main():
         # Legend text
         draw.text(
             (legend_x + 30, y_pos),
-            # REVISIT, don't depend on the idx being the same as the place in a list.
-            f"{i} : {reader.inks[i - 1].name}",
+            # lookup ink name from ordered ink_list
+            f"{i} : {ink_list[i - 1].name}",
             fill="black",
             font=font,
         )

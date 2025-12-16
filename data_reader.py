@@ -2,6 +2,7 @@
 Module for reading pen and ink data from an ODS spreadsheet.
 """
 
+import hashlib
 import logging
 import xml.etree.ElementTree as ET
 import zipfile
@@ -14,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class FountainPen:
+    id: int
     brand: str
     name: str
     nib_size: str
@@ -22,6 +24,7 @@ class FountainPen:
 
 @dataclass
 class Ink:
+    id: int
     brand: str
     name: str
     color_srgb: List[str]
@@ -30,8 +33,11 @@ class Ink:
 
 @dataclass
 class PenSetup:
-    pen: FountainPen
-    ink: Ink
+    """Represents a pen+ink pairing by their IDs."""
+
+    id: int
+    pen_id: int
+    ink_id: int
 
 
 class DataReader:
@@ -47,7 +53,7 @@ class DataReader:
         self.raw_rows = self.read()
         self.pens = self.create_pens(self.raw_rows)
         self.inks = self.create_inks(self.raw_rows)
-        self.setups = self.create_setups(self.pens, self.inks)
+        self.setups = self.create_setups(self.raw_rows, self.pens, self.inks)
 
     def _get_content_xml(self) -> ET.Element:
         with zipfile.ZipFile(self.filepath, "r") as z:
@@ -57,8 +63,8 @@ class DataReader:
     def read(self) -> List[Dict[str, str]]:
         """
         Parse the ODS and return raw rows as dicts.
-        Each dict has keys: pen_brand, pen_name, nib_size, ink_brand, color_name,
-        srgb_h, srgb_s, srgb_v, rgb_hex.
+        Each dict has keys: pen_brand, pen_name, pen_body_color, nib_size, ink_brand,
+        color_name, srgb_h, srgb_s, srgb_v, rgb_hex.
         """
         logger.debug(f"Reading ODS file: {self.filepath}")
         root = self._get_content_xml()
@@ -75,6 +81,7 @@ class DataReader:
         keys = [
             "pen_brand",
             "pen_name",
+            "pen_body_color",
             "nib_size",
             "ink_brand",
             "color_name",
@@ -104,55 +111,86 @@ class DataReader:
         logger.debug(f"Returned {len(raw_rows)} number of rows.")
         return raw_rows
 
-    def create_pens(self, raw_rows: List[Dict[str, str]]) -> List[FountainPen]:
+    def create_pens(self, raw_rows: List[Dict[str, str]]) -> Dict[int, FountainPen]:
         """
         Create FountainPen objects from raw data rows.
         """
         logger.debug(f"Creating pens from {len(raw_rows)} rows")
-        pens: List[FountainPen] = []
+        pens: Dict[int, FountainPen] = {}
         for row in raw_rows:
-            pens.append(
-                FountainPen(
-                    brand=row.get("pen_brand", ""),
-                    name=row.get("pen_name", ""),
-                    nib_size=row.get("nib_size", ""),
-                    # add body_color determination from pen_name
-                    # e.g. Pilot Metropolitan [fekete]
-                    body_color="TBD",
-                )
+            # compute SHA-256-based id from pen fields
+            brand = row.get("pen_brand", "")
+            name = row.get("pen_name", "")
+            body_color = row.get("pen_body_color", "")
+            raw = "|".join([brand, name, body_color]).encode("utf-8")
+            pen_id = int.from_bytes(hashlib.sha256(raw).digest(), "big")
+            pens[pen_id] = FountainPen(
+                id=pen_id,
+                brand=brand,
+                name=name,
+                nib_size=row.get("nib_size", ""),
+                body_color=body_color,
             )
         return pens
 
-    def create_inks(self, raw_rows: List[Dict[str, str]]) -> List[Ink]:
+    def create_inks(self, raw_rows: List[Dict[str, str]]) -> Dict[int, Ink]:
         """
-        Create Ink objects from raw data rows.
+        Create Ink objects from raw data rows, keyed by SHA-256 id.
         """
         logger.debug(f"Creating inks from {len(raw_rows)} rows")
-        inks: List[Ink] = []
+        inks: Dict[int, Ink] = {}
         for row in raw_rows:
-            inks.append(
-                Ink(
-                    brand=row.get("ink_brand", ""),
-                    name=row.get("color_name", ""),
-                    color_srgb=[
-                        row.get("srgb_h", ""),
-                        row.get("srgb_s", ""),
-                        row.get("srgb_v", ""),
-                    ],
-                    color_rgb_hex=row.get("rgb_hex", ""),
-                )
+            # compute SHA-256-based id from ink fields
+            brand = row.get("ink_brand", "")
+            name = row.get("color_name", "")
+            raw = "|".join([brand, name]).encode("utf-8")
+            ink_id = int.from_bytes(hashlib.sha256(raw).digest(), "big")
+            inks[ink_id] = Ink(
+                id=ink_id,
+                brand=brand,
+                name=name,
+                color_srgb=[
+                    row.get("srgb_h", ""),
+                    row.get("srgb_s", ""),
+                    row.get("srgb_v", ""),
+                ],
+                color_rgb_hex=row.get("rgb_hex", ""),
             )
         return inks
 
     # REVISIT we need different data structure for pens/inks to easily find
     # the matched ink and pens
-    def create_setups(self, pens: List[FountainPen], inks: List[Ink]) -> List[PenSetup]:
+    def create_setups(
+        self,
+        raw_rows: List[Dict[str, str]],
+        pens: Dict[int, FountainPen],
+        inks: Dict[int, Ink],
+    ) -> Dict[int, PenSetup]:
         """
-        Pair pens and inks in order to create a list of PenSetup.
+        Create PenSetup objects keyed by SHA-256 id, mapping raw row pairs.
         """
-        setups: List[PenSetup] = []
-        for pen, ink in zip(pens, inks):
-            setups.append(PenSetup(pen=pen, ink=ink))
+        setups: Dict[int, PenSetup] = {}
+        for row in raw_rows:
+            # recompute pen_id and ink_id
+            p_raw = "|".join(
+                [
+                    row.get("pen_brand", ""),
+                    row.get("pen_name", ""),
+                    row.get("pen_body_color", ""),
+                ]
+            ).encode("utf-8")
+            pen_id = int.from_bytes(hashlib.sha256(p_raw).digest(), "big")
+            i_raw = "|".join(
+                [
+                    row.get("ink_brand", ""),
+                    row.get("color_name", ""),
+                ]
+            ).encode("utf-8")
+            ink_id = int.from_bytes(hashlib.sha256(i_raw).digest(), "big")
+            # compute setup_id
+            s_raw = f"{pen_id}|{ink_id}".encode("utf-8")
+            setup_id = int.from_bytes(hashlib.sha256(s_raw).digest(), "big")
+            setups[setup_id] = PenSetup(id=setup_id, pen_id=pen_id, ink_id=ink_id)
         return setups
 
     def load_setups(self) -> List[PenSetup]:
@@ -166,6 +204,6 @@ class DataReader:
         raw_rows = self.read()
         pens = self.create_pens(raw_rows)
         inks = self.create_inks(raw_rows)
-        setups = self.create_setups(pens, inks)
+        setups = self.create_setups(raw_rows, pens, inks)
         logger.info(f"Loaded {len(setups)} pen setups")
         return setups
