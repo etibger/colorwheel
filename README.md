@@ -93,7 +93,7 @@ for setup in reader.setups:
 
 1. Install development dependencies (including dev extras):
    ```bash
-   uv install --dev
+   uv sync
    ```
 2. Run tests:
    ```bash
