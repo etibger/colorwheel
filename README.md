@@ -61,6 +61,35 @@ At the top of `main.py`, adjust constants to modify the output:
 - `OUTPUT_FILE` (str): name of the saved image
 
 ## Data Integration
+Below is the Entity-Relationship diagram for Pens, Inks, and Setups:
+
+```mermaid
+erDiagram
+    FountainPen {
+        int id PK "Primary key (SHA-256 hash)"
+        string brand
+        string name
+        string nib_size
+        string body_color
+    }
+    Ink {
+        int id PK "Primary key (SHA-256 hash)"
+        string brand
+        string name
+        float srgb_h
+        float srgb_s
+        float srgb_v
+        string rgb_hex
+    }
+    PenSetup {
+        int id PK "Primary key (SHA-256 hash)"
+        int pen_id FK "Foreign key → FountainPen.id"
+        int ink_id FK "Foreign key → Ink.id"
+    }
+
+    FountainPen ||--o{ PenSetup : uses
+    Ink ||--o{ PenSetup : contains
+```
 
 The `data/tinta_szinek.ods` file contains pen and ink definitions.
 Use the `data_reader.py` module to load detailed setups. It now returns dictionaries keyed by each item's SHA-256-based `id`:
@@ -97,7 +126,7 @@ for setup in reader.setups:
    ```
 2. Run tests:
    ```bash
-   uv run pytest
+   make all
    ```
 3. Lint code:
    ```bash
@@ -105,12 +134,8 @@ for setup in reader.setups:
    ```
 4. Set up Git pre-commit hooks:
    ```bash
-   # Add pre-commit to dev dependencies
-   uv add pre-commit --dev
    # Install the git hook scripts
    uv run pre-commit install
-   # (Optional) Verify all files against hooks
-   uv run pre-commit run --all-files
    ```
 
 ## License
