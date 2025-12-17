@@ -24,7 +24,7 @@ and a side legend detailing each color.
 
 ## Demo
 
-<img src="color_wheel_with_legend.png" alt="Generated Color Wheel" width="600" />
+<img src="data/golden.png" alt="Generated Color Wheel" width="600" />
 
 ## Installation
 
