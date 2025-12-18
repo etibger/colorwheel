@@ -28,7 +28,7 @@ and a side legend detailing each color.
 
 Ensure you have Python 3.14+ installed.
 
-Before working with the project, activate the virtual environment:
+Before working with the project without uv, activate the virtual environment:
 
 ```bash
 source .venv/bin/activate
@@ -37,7 +37,7 @@ source .venv/bin/activate
 Then install all dependencies via `uv`:
 
 ```bash
-uv install
+uv sync
 ```
 
 This will install runtime dependencies including `pillow` and `sqlalchemy`.
@@ -113,7 +113,7 @@ Use the `data_reader.py` module to load detailed setups. It now returns dictiona
 Note that each `FountainPen`, `Ink`, and `PenSetup` now includes an `id` attribute
 generated as a SHA-256 hash of its key fields.
 
-````python
+```python
 from data_reader import DataReader
 
 # initialize reader (parses and builds objects)
@@ -132,9 +132,12 @@ for setup in reader.setups:
     pen = setup.pen
     ink = setup.ink
     print(f"{pen.brand} {pen.name} ({pen.nib_size}) → {ink.name} [{ink.color_rgb_hex}]")
+```
 
 ### Database ORM
+
 Persist pens, inks, and setups to a SQL database using the SQLAlchemy ORM in `orm.py`:
+
 ```python
 from sqlalchemy.orm import sessionmaker
 from orm import load_data_from_ods, FountainPen, Ink, PenSetup
@@ -152,17 +155,14 @@ inks = session.query(Ink).all()
 setups = session.query(PenSetup).all()
 for pen in pens:
     print(pen.brand, pen.name)
-````
-
-````
+```
 
 ## Development
 
 1. Install development dependencies (including dev extras):
    ```bash
    uv sync
-````
-
+   ```
 2. Run tests:
    ```bash
    make all
