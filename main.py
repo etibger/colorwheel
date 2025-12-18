@@ -1,12 +1,15 @@
 import argparse
 import logging
 from pathlib import Path
+import json
 
 from PIL import Image, ImageDraw, ImageFont
 
 from data_reader import DataReader
 from draw import HEX_COLORS, IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
-from orm import load_data_from_ods
+from orm import load_data_from_ods, FountainPen, Ink, PenSetup
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 # ==========================
 # CONFIGURATION & ARGPARSE
@@ -48,6 +51,12 @@ def parse_args():
         help="SQLAlchemy database URL to save pens, inks, and setups",
         default=None,
     )
+    parser.add_argument(
+        "--export-json",
+        dest="export_json",
+        help="Path to JSON file to export pens, inks, and setups",
+        default=None,
+    )
     return parser.parse_args()
 
 
@@ -65,6 +74,33 @@ def main():
     args = parse_args()
     setup_logging(args.verbose)
     logging.debug(f"Arguments: {args}")
+    # Export existing DB data to JSON if requested
+    if args.export_json:
+        if not args.db_url:
+            logging.error("--db-url is required with --export-json")
+            return
+        # Initialize and populate the database from ODS
+        engine = load_data_from_ods(args.data_file, args.db_url)
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        pens = [
+            {"id": p.id, "brand": p.brand, "name": p.name, "nib_size": p.nib_size, "body_color": p.body_color}
+            for p in session.query(FountainPen).all()
+        ]
+        inks = [
+            {"id": i.id, "brand": i.brand, "name": i.name, "srgb_h": i.srgb_h, "srgb_s": i.srgb_s, "srgb_v": i.srgb_v, "rgb_hex": i.rgb_hex}
+            for i in session.query(Ink).all()
+        ]
+        setups = [
+            {"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
+            for s in session.query(PenSetup).all()
+        ]
+        data = {"pens": pens, "inks": inks, "setups": setups}
+        out_path = Path(args.export_json)
+        with open(out_path, "w") as f:
+            json.dump(data, f, indent=2)
+        logging.info(f"Exported data to {out_path}")
+        return
     # if requested, load data to SQL DB and exit
     if args.db_url:
         logging.info(f"Loading data from ODS to database at {args.db_url}")

@@ -44,11 +44,14 @@ This will install runtime dependencies including `pillow` and `sqlalchemy`.
 
 ## Usage
 
-Run the generator script or load data into a SQL database:
+Run the generator script, export to JSON, or load data into a SQL database:
 
 ```bash
 # Generate color wheel image
 uv run main.py [-o OUTPUT_FILE] [-v] [--use-data] [--data-file PATH]
+
+# Export existing database records to JSON
+uv run main.py --db-url sqlite:///pens.db --export-json data/export.json
 
 # Load pens, inks, and setups into a SQL database
 uv run main.py --db-url sqlite:///pens.db [--data-file PATH]

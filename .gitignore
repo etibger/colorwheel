@@ -12,3 +12,4 @@ wheels/
 # Generated files
 colorwheel.log
 color_wheel_with_legend.png
+data/output.json
