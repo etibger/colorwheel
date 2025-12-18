@@ -6,6 +6,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from data_reader import DataReader
 from draw import HEX_COLORS, IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
+from orm import load_data_from_ods
 
 # ==========================
 # CONFIGURATION & ARGPARSE
@@ -41,6 +42,12 @@ def parse_args():
         default="data/tinta_szinek.ods",
         help="Path to ODS file when using --use-data",
     )
+    parser.add_argument(
+        "--db-url",
+        dest="db_url",
+        help="SQLAlchemy database URL to save pens, inks, and setups",
+        default=None,
+    )
     return parser.parse_args()
 
 
@@ -58,6 +65,12 @@ def main():
     args = parse_args()
     setup_logging(args.verbose)
     logging.debug(f"Arguments: {args}")
+    # if requested, load data to SQL DB and exit
+    if args.db_url:
+        logging.info(f"Loading data from ODS to database at {args.db_url}")
+        load_data_from_ods(args.data_file, args.db_url)
+        logging.info("Database load complete.")
+        return
     # determine marker colors
     if args.use_data:
         logging.info(f"Loading colors from data file: {args.data_file}")

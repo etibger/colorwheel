@@ -10,6 +10,6 @@ all: clean test
 
 clean:
 	@echo "Cleaning caches and generated files..."
-	@rm -rf .cache .pre-commit .precommit_home .pytest_cache colorwheel.log color_wheel_with_legend.png
+	@rm -rf .cache .pre-commit .precommit_home .pytest_cache colorwheel.log color_wheel_with_legend.png data/tmp.db
 	@find . -type d -name "__pycache__" -exec rm -rf {} +
 	@find . -type f \( -name "*.pyc" -o -name "*.pyo" \) -delete

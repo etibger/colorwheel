@@ -1,7 +1,5 @@
 # Color Wheel Generator
 
-#
-
 Generates a high-quality RGB color wheel image with customizable markers
 and a side legend detailing each color.
 
@@ -28,18 +26,32 @@ and a side legend detailing each color.
 
 ## Installation
 
-Ensure you have Python 3.14+ installed. Then install all dependencies via `uv`:
+Ensure you have Python 3.14+ installed.
+
+Before working with the project, activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Then install all dependencies via `uv`:
 
 ```bash
 uv install
 ```
 
+This will install runtime dependencies including `pillow` and `sqlalchemy`.
+
 ## Usage
 
-Run the generator script:
+Run the generator script or load data into a SQL database:
 
 ```bash
+# Generate color wheel image
 uv run main.py [-o OUTPUT_FILE] [-v] [--use-data] [--data-file PATH]
+
+# Load pens, inks, and setups into a SQL database
+uv run main.py --db-url sqlite:///pens.db [--data-file PATH]
 ```
 
 Options:
@@ -61,6 +73,7 @@ At the top of `main.py`, adjust constants to modify the output:
 - `OUTPUT_FILE` (str): name of the saved image
 
 ## Data Integration
+
 Below is the Entity-Relationship diagram for Pens, Inks, and Setups:
 
 ```mermaid
@@ -97,7 +110,7 @@ Use the `data_reader.py` module to load detailed setups. It now returns dictiona
 Note that each `FountainPen`, `Ink`, and `PenSetup` now includes an `id` attribute
 generated as a SHA-256 hash of its key fields.
 
-```python
+````python
 from data_reader import DataReader
 
 # initialize reader (parses and builds objects)
@@ -116,14 +129,37 @@ for setup in reader.setups:
     pen = setup.pen
     ink = setup.ink
     print(f"{pen.brand} {pen.name} ({pen.nib_size}) → {ink.name} [{ink.color_rgb_hex}]")
-```
+
+### Database ORM
+Persist pens, inks, and setups to a SQL database using the SQLAlchemy ORM in `orm.py`:
+```python
+from sqlalchemy.orm import sessionmaker
+from orm import load_data_from_ods, FountainPen, Ink, PenSetup
+
+# Load data into SQLite database
+engine = load_data_from_ods(
+    'data/tinta_szinek.ods',
+    'sqlite:///pens.db'
+)
+# Querying
+Session = sessionmaker(bind=engine)
+session = Session()
+pens = session.query(FountainPen).all()
+inks = session.query(Ink).all()
+setups = session.query(PenSetup).all()
+for pen in pens:
+    print(pen.brand, pen.name)
+````
+
+````
 
 ## Development
 
 1. Install development dependencies (including dev extras):
    ```bash
    uv sync
-   ```
+````
+
 2. Run tests:
    ```bash
    make all

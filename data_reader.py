@@ -28,7 +28,7 @@ class Ink:
     brand: str
     name: str
     color_srgb: List[str]
-    color_rgb_hex: int
+    color_rgb_hex: str
 
 
 @dataclass
@@ -145,6 +145,9 @@ class DataReader:
             name = row.get("color_name", "")
             raw = "|".join([brand, name]).encode("utf-8")
             ink_id = int.from_bytes(hashlib.sha256(raw).digest(), "big")
+            # Normalize hex code by stripping leading '#'
+            raw_hex = row.get("rgb_hex", "") or ""
+            hex_code = raw_hex.lstrip('#')
             inks[ink_id] = Ink(
                 id=ink_id,
                 brand=brand,
@@ -154,7 +157,7 @@ class DataReader:
                     row.get("srgb_s", ""),
                     row.get("srgb_v", ""),
                 ],
-                color_rgb_hex=row.get("rgb_hex", ""),
+                color_rgb_hex=hex_code,
             )
         return inks
 
