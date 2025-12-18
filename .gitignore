@@ -13,3 +13,5 @@ wheels/
 colorwheel.log
 color_wheel_with_legend.png
 data/output.json
+colorwheel_textual.log
+colorwheel_debug.log
