@@ -1,15 +1,49 @@
 import argparse
+import json
 import logging
 from pathlib import Path
-import json
 
 from PIL import Image, ImageDraw, ImageFont
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from data_reader import DataReader
 from draw import HEX_COLORS, IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
-from orm import load_data_from_ods, FountainPen, Ink, PenSetup
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from orm import FountainPen, Ink, PenSetup, load_data_from_ods
+
+
+def generate_wheel_from_db(db_url: str, output_file: str) -> Path:
+    """
+    Generate a color wheel PNG from inks stored in the database.
+    """
+    # Normalize SQLite URL
+    if "://" not in db_url:
+        db_url = f"sqlite:///{db_url}"
+    engine = create_engine(db_url)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    # Get inks from DB
+    inks = session.query(Ink).all()
+    marker_colors = [(ink.name, ink.rgb_hex) for ink in inks]
+    session.close()
+    # Create image
+    img = Image.new("RGB", IMAGE_SIZE, "white")
+    draw = ImageDraw.Draw(img)
+    # Load font
+    try:
+        font = ImageFont.truetype("DejaVuSans.ttf", 16)
+        font_bold = ImageFont.truetype("DejaVuSans.ttf", 18)
+    except IOError:
+        font = font_bold = ImageFont.load_default()
+    # Draw elements
+    draw_color_wheel(img)
+    positions = draw_markers(draw, marker_colors, font_bold)
+    draw_legend(draw, positions, font, font_bold)
+    # Save PNG
+    out_path = Path(output_file)
+    img.save(out_path)
+    return out_path
+
 
 # ==========================
 # CONFIGURATION & ARGPARSE
@@ -42,7 +76,7 @@ def parse_args():
     )
     parser.add_argument(
         "--data-file",
-        default="data/tinta_szinek.ods",
+        default="data/golden.ods",
         help="Path to ODS file when using --use-data",
     )
     parser.add_argument(
@@ -76,28 +110,45 @@ def main():
     logging.debug(f"Arguments: {args}")
     # Export existing DB data to JSON if requested
     if args.export_json:
-        if not args.db_url:
-            logging.error("--db-url is required with --export-json")
-            return
-        # Initialize and populate the database from ODS
-        engine = load_data_from_ods(args.data_file, args.db_url)
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        pens = [
-            {"id": p.id, "brand": p.brand, "name": p.name, "nib_size": p.nib_size, "body_color": p.body_color}
-            for p in session.query(FountainPen).all()
-        ]
-        inks = [
-            {"id": i.id, "brand": i.brand, "name": i.name, "srgb_h": i.srgb_h, "srgb_s": i.srgb_s, "srgb_v": i.srgb_v, "rgb_hex": i.rgb_hex}
-            for i in session.query(Ink).all()
-        ]
-        setups = [
-            {"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
-            for s in session.query(PenSetup).all()
-        ]
-        data = {"pens": pens, "inks": inks, "setups": setups}
+        # If --db-url provided, export from DB; else export directly from ODS
         out_path = Path(args.export_json)
-        with open(out_path, "w") as f:
+        if args.db_url:
+            # Export existing DB data to JSON
+            engine = load_data_from_ods(args.data_file, args.db_url)
+            Session = sessionmaker(bind=engine)
+            session = Session()
+            pens = [
+                {"id": p.id, "brand": p.brand, "name": p.name,
+                 "nib_size": p.nib_size, "body_color": p.body_color}
+                for p in session.query(FountainPen).all()
+            ]
+            inks = [
+                {"id": i.id, "brand": i.brand, "name": i.name,
+                 "srgb_h": i.srgb_h, "srgb_s": i.srgb_s, "srgb_v": i.srgb_v,
+                 "rgb_hex": i.rgb_hex}
+                for i in session.query(Ink).all()
+            ]
+            setups = [{"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
+                      for s in session.query(PenSetup).all()]
+        else:
+            # Export directly from ODS file
+            # Use the already imported DataReader
+            reader = DataReader(args.data_file)
+            pens = [
+                {"id": p.id, "brand": p.brand, "name": p.name,
+                 "nib_size": p.nib_size, "body_color": p.body_color}
+                for p in reader.pens.values()
+            ]
+            inks = [
+                {"id": i.id, "brand": i.brand, "name": i.name,
+                 "srgb_h": i.color_srgb[0], "srgb_s": i.color_srgb[1],
+                 "srgb_v": i.color_srgb[2], "rgb_hex": i.color_rgb_hex}
+                for i in reader.inks.values()
+            ]
+            setups = [{"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
+                      for s in reader.setups.values()]
+        data = {"pens": pens, "inks": inks, "setups": setups}
+        with open(out_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
         logging.info(f"Exported data to {out_path}")
         return

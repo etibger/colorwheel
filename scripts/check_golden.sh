@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "Generating image with data source..."
 # Run the main script to produce the output PNG
-uv run main.py --verbose --use-data --data-file data/tinta_szinek.ods
+uv run main.py --use-data --data-file data/golden.ods
 
 echo "Comparing generated image to golden..."
 # Compare outputs quietly, exit non-zero if they differ

@@ -55,6 +55,9 @@ uv run main.py --db-url sqlite:///pens.db --export-json data/export.json
 
 # Load pens, inks, and setups into a SQL database
 uv run main.py --db-url sqlite:///pens.db [--data-file PATH]
+
+# Launch the interactive converter UI
+uv run ui.py
 ```
 
 Options:
@@ -62,7 +65,7 @@ Options:
 - `-o, --output` : output filename (default: `color_wheel_with_legend.png`)
 - `-v, --verbose`: enable verbose logging to console and file (`colorwheel.log`)
 - `--use-data` : use colors from the ODS data file instead of defaults
-- `--data-file` : path to the ODS data file (default: `data/tinta_szinek.ods`)
+- `--data-file` : path to the ODS data file (default: `data/golden.ods`)
   Options:
 
 ## Configuration
@@ -107,7 +110,7 @@ erDiagram
     Ink ||--o{ PenSetup : contains
 ```
 
-The `data/tinta_szinek.ods` file contains pen and ink definitions.
+The `data/golden.ods` file contains pen and ink definitions.
 Use the `data_reader.py` module to load detailed setups. It now returns dictionaries keyed by each item's SHA-256-based `id`:
 
 Note that each `FountainPen`, `Ink`, and `PenSetup` now includes an `id` attribute
@@ -117,7 +120,7 @@ generated as a SHA-256 hash of its key fields.
 from data_reader import DataReader
 
 # initialize reader (parses and builds objects)
-reader = DataReader('data/tinta_szinek.ods')
+reader = DataReader('data/golden.ods')
 # raw rows, pens, inks, and setups are available as attributes
 print(reader.raw_rows)        # List[Dict[str,str]]
 # pens: Dict[id, FountainPen]
@@ -143,8 +146,7 @@ from sqlalchemy.orm import sessionmaker
 from orm import load_data_from_ods, FountainPen, Ink, PenSetup
 
 # Load data into SQLite database
-engine = load_data_from_ods(
-    'data/tinta_szinek.ods',
+    'data/golden.ods',
     'sqlite:///pens.db'
 )
 # Querying
