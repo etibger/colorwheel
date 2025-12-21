@@ -28,13 +28,26 @@ and a side legend detailing each color.
 
 Ensure you have Python 3.14+ installed.
 
-Before working with the project without uv, activate the virtual environment:
+### Installing without uv
+
+If uv is not available, a virtual environment can be created, activated and dependencies can be installed with pip:
 
 ```bash
+python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install -U pip
+python -m pip install -e .
 ```
 
-Then install all dependencies via `uv`:
+After this the gui can be started like:
+
+```bash
+python3 ui.py
+```
+
+### Installing with uv
+
+Install all dependencies via `uv`:
 
 ```bash
 uv sync
@@ -58,6 +71,18 @@ uv run main.py --db-url sqlite:///pens.db [--data-file PATH]
 
 # Launch the interactive converter UI
 uv run ui.py
+
+## Interactive Converter UI
+
+The project includes a Textual-based interactive converter interface implemented in `ui.py`. You can:
+- Select input format (ODS, SQL DB, JSON)
+- Specify input and output file paths
+- Choose output format (ODS, SQL DB, JSON, PNG)
+- View live conversion logs in the embedded console
+- Navigate with Tab, select options with Enter, and press Run to execute
+
+Example screenshot:
+<img src="data/ui.png" alt="Interactive Converter UI" width="600" />
 ```
 
 Options:
