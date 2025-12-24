@@ -71,10 +71,25 @@ uv run main.py --db-url sqlite:///pens.db [--data-file PATH]
 
 # Launch the interactive converter UI
 uv run ui.py
+```
+
+### Options for Main
+
+```bash
+- `-o, --output` : output filename (default: `color_wheel_with_legend.png`)
+- `-v, --verbose`: enable verbose logging to console and file (`colorwheel.log`)
+- `--use-data` : use colors from the ODS data file instead of defaults
+- `--data-file` : path to the ODS data file (default: `data/golden.ods`)
+```
+
+### Options for UI
+
+- `-v, --verbose`: increase verbosity level (use `-v` for WARNING, `-vv` for INFO, `-vvv` for DEBUG).
 
 ## Interactive Converter UI
 
 The project includes a Textual-based interactive converter interface implemented in `ui.py`. You can:
+
 - Select input format (ODS, SQL DB, JSON)
 - Specify input and output file paths
 - Choose output format (ODS, SQL DB, JSON, PNG)
@@ -87,20 +102,10 @@ Example screenshot:
 ### UI CLI & Logging
 
 - **Usage**: launch with `python ui.py [options]` or `uv run ui.py [options]`.
-- **-v/--verbose**: increase verbosity level (use `-v` for INFO, `-vv` for DEBUG).
 - **Logging** is set up via `setup_logging()` in `ui.py`:
   - Logs at INFO level to stderr by default (e.g. conversion start/errors).
   - If verbosity ≥2, DEBUG-level messages are also written to `colorwheel_ui.log`.
   - The logger name is `colorwheel_ui` and uses separate handlers for console and file.
-```
-
-Options:
-
-- `-o, --output` : output filename (default: `color_wheel_with_legend.png`)
-- `-v, --verbose`: enable verbose logging to console and file (`colorwheel.log`)
-- `--use-data` : use colors from the ODS data file instead of defaults
-- `--data-file` : path to the ODS data file (default: `data/golden.ods`)
-  Options:
 
 ## Configuration
 
