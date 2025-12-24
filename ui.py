@@ -21,14 +21,14 @@ from ui_converters import handle_conversion
 
 
 def verbosity_to_loglevel(verbosity: int) -> int:
+    # Map verbosity count to logging levels: 0->ERROR, 1->WARNING, 2->INFO, >=3->DEBUG
     if verbosity <= 0:
         return logging.ERROR
-    elif verbosity == 1:
+    if verbosity == 1:
         return logging.WARNING
-    elif verbosity == 2:
+    if verbosity == 2:
         return logging.INFO
-    else:
-        return logging.DEBUG
+    return logging.DEBUG
 
 
 def setup_logging(verbose: int) -> logging.Logger:
@@ -67,12 +67,14 @@ def init_cli() -> tuple[int, logging.Logger]:
     # to receive their own flags
     args, _ = parser.parse_known_args()
     logger = setup_logging(args.verbose)
-    logger.debug("ui.py execution begins")
+    # Debug initial messages based on verbose
+    logger.debug("ui.py execution begins (verbosity=%d)", args.verbose)
     logger.debug("attempting to import textual modules")
+    # Return only configured logger
     return logger
 
 
-# Initialize CLI and logger
+# Initialize CLI parsing and logger
 logger = init_cli()
 try:
     from textual.app import App, ComposeResult

@@ -42,6 +42,11 @@ def generate_wheel_from_db(db_url: str, output_file: str) -> Path:
     # Save PNG
     out_path = Path(output_file)
     img.save(out_path)
+    # Dispose engine to close database connections
+    try:
+        engine.dispose()
+    except NameError:
+        pass
     return out_path
 
 
@@ -94,14 +99,27 @@ def parse_args():
     return parser.parse_args()
 
 
-def setup_logging(verbose: bool, logfile: str = "colorwheel.log"):
+def setup_logging(verbose: bool, logfile: str = "colorwheel.log") -> logging.Logger:
+    """Configure and return a dedicated logger based on verbose flag."""
     level = logging.DEBUG if verbose else logging.INFO
     fmt = "%(asctime)s [%(levelname)s] %(message)s"
-    logging.basicConfig(
-        level=level,
-        format=fmt,
-        handlers=[logging.StreamHandler(), logging.FileHandler(logfile, mode="w")],
-    )
+    # Configure handlers on a named logger
+    name = "colorwheel_main"
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    # Clear existing handlers to avoid duplicates
+    logger.handlers.clear()
+    # Console handler
+    ch = logging.StreamHandler()
+    ch.setLevel(level)
+    ch.setFormatter(logging.Formatter(fmt))
+    # File handler
+    fh = logging.FileHandler(logfile, mode="w")
+    fh.setLevel(level)
+    fh.setFormatter(logging.Formatter(fmt))
+    logger.addHandler(ch)
+    logger.addHandler(fh)
+    return logger
 
 
 def main():
@@ -118,35 +136,61 @@ def main():
             Session = sessionmaker(bind=engine)
             session = Session()
             pens = [
-                {"id": p.id, "brand": p.brand, "name": p.name,
-                 "nib_size": p.nib_size, "body_color": p.body_color}
+                {
+                    "id": p.id,
+                    "brand": p.brand,
+                    "name": p.name,
+                    "nib_size": p.nib_size,
+                    "body_color": p.body_color,
+                }
                 for p in session.query(FountainPen).all()
             ]
             inks = [
-                {"id": i.id, "brand": i.brand, "name": i.name,
-                 "srgb_h": i.srgb_h, "srgb_s": i.srgb_s, "srgb_v": i.srgb_v,
-                 "rgb_hex": i.rgb_hex}
+                {
+                    "id": i.id,
+                    "brand": i.brand,
+                    "name": i.name,
+                    "srgb_h": i.srgb_h,
+                    "srgb_s": i.srgb_s,
+                    "srgb_v": i.srgb_v,
+                    "rgb_hex": i.rgb_hex,
+                }
                 for i in session.query(Ink).all()
             ]
-            setups = [{"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
-                      for s in session.query(PenSetup).all()]
+            setups = [
+                {"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
+                for s in session.query(PenSetup).all()
+            ]
         else:
             # Export directly from ODS file
             # Use the already imported DataReader
             reader = DataReader(args.data_file)
             pens = [
-                {"id": p.id, "brand": p.brand, "name": p.name,
-                 "nib_size": p.nib_size, "body_color": p.body_color}
+                {
+                    "id": p.id,
+                    "brand": p.brand,
+                    "name": p.name,
+                    "nib_size": p.nib_size,
+                    "body_color": p.body_color,
+                }
                 for p in reader.pens.values()
             ]
             inks = [
-                {"id": i.id, "brand": i.brand, "name": i.name,
-                 "srgb_h": i.color_srgb[0], "srgb_s": i.color_srgb[1],
-                 "srgb_v": i.color_srgb[2], "rgb_hex": i.color_rgb_hex}
+                {
+                    "id": i.id,
+                    "brand": i.brand,
+                    "name": i.name,
+                    "srgb_h": i.color_srgb[0],
+                    "srgb_s": i.color_srgb[1],
+                    "srgb_v": i.color_srgb[2],
+                    "rgb_hex": i.color_rgb_hex,
+                }
                 for i in reader.inks.values()
             ]
-            setups = [{"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
-                      for s in reader.setups.values()]
+            setups = [
+                {"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
+                for s in reader.setups.values()
+            ]
         data = {"pens": pens, "inks": inks, "setups": setups}
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)

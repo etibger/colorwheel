@@ -54,6 +54,7 @@ def test_ods_to_db(tmp_path, in_ods):
         for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
     }
     conn.close()
+    # Close SQLite connection to avoid unclosed db warning
     assert "fountain_pens" in tables and "inks" in tables
 
 
@@ -96,6 +97,7 @@ def test_json_to_db(tmp_path, in_json):
         for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
     }
     conn.close()
+    # Close SQLite connection to avoid unclosed db warning
     assert "fountain_pens" in tables and "inks" in tables
 
 

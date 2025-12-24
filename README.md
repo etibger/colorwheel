@@ -212,6 +212,10 @@ for pen in pens:
    ```bash
    uv run flake8
    ```
+4. Run tests with coverage:
+   ```bash
+   make coverage
+   ```
 
 ## Testing
 
@@ -223,9 +227,9 @@ for pen in pens:
   - Database-to-PNG and ODS-to-PNG image comparisons
   - ODS/DB ↔ JSON round-trip consistency
   - File existence and schema validations
-- Run all tests with:
+- Run all tests with coverage:
   ```bash
-  pytest tests
+  pytest --cov=. --cov-report=term-missing tests
   ```
 
 4. Set up Git pre-commit hooks:

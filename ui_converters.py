@@ -85,6 +85,8 @@ def db_to_json(in_path: str, out_path: str):
         for s in session.query(PenSetup).all()
     ]
     session.close()
+    # Dispose engine to close DB connections
+    engine.dispose()
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump({"pens": pens, "inks": inks, "setups": setups}, f, indent=2)
 
@@ -135,6 +137,8 @@ def json_to_db(in_path: str, out_path: str):
         session.add(PenSetup(**s))
     session.commit()
     session.close()
+    # Dispose engine to close DB connections
+    engine.dispose()
 
 
 def json_to_png(in_path: str, out_path: str):
