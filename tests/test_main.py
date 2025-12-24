@@ -90,3 +90,102 @@ def test_default_generate_image(tmp_path, sample_ods, monkeypatch):
     main.main()
     assert tmp_png.exists(), "Default PNG not generated"
     tmp_png.unlink()
+
+
+def test_load_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
+    """Test CLI handling of full SQLite URL for --db-url."""
+    # Prepare output DB path
+    out_db = tmp_path / "url_load.db"
+    # Use full sqlite URL scheme
+    db_url = f"sqlite:///{out_db}"
+    # Prevent pytest from picking up '-v' flags
+    monkeypatch.setenv("PYTEST_DISABLE_PLUGIN_AUTOLOAD", "1")
+    # Override argv and invoke main
+    import sqlite3
+    import sys
+
+    monkeypatch.setattr(
+        sys, "argv", ["main.py", "--db-url", db_url, "--data-file", sample_ods]
+    )
+    # Running with URL should create the same out_db file
+    import main
+
+    main.main()
+    # Check file exists
+    assert out_db.exists(), "DB file not created for full URL"
+    # Verify tables inside the created DB
+    conn = sqlite3.connect(str(out_db))
+    tables = {
+        r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    }
+    conn.close()
+    assert "fountain_pens" in tables and "inks" in tables
+
+
+@pytest.mark.usefixtures("sample_ods")
+def test_export_json_from_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
+    """Test CLI --export-json uses full SQLite URL to export DB to JSON."""
+    # First create a DB from ODS
+    from orm import load_data_from_ods
+
+    db_path = tmp_path / "db_for_json.db"
+    engine = load_data_from_ods(sample_ods, str(db_path))
+    engine.dispose()
+    # Now export JSON via CLI
+    out_json = tmp_path / "export.json"
+    db_url = f"sqlite:///{db_path}"
+    monkeypatch.setenv("PYTEST_DISABLE_PLUGIN_AUTOLOAD", "1")
+    import sys
+
+    monkeypatch.setattr(
+        sys, "argv", ["main.py", "--export-json", str(out_json), "--db-url", db_url]
+    )
+    import main
+
+    main.main()
+    # Verify JSON file
+    assert out_json.exists(), "JSON not created from DB URL"
+    data = json.loads(out_json.read_text(encoding="utf-8"))
+    assert set(data.keys()) == {"pens", "inks", "setups"}
+    assert len(data["pens"]) > 0 and len(data["inks"]) > 0
+
+
+@pytest.mark.usefixtures("sample_ods")
+def test_import_json_to_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
+    """Test CLI --import-json with full SQLite URL to import JSON data."""
+    # Prepare JSON from sample ODS
+    from orm import load_data_from_ods
+
+    db0 = tmp_path / "init.db"
+    eng0 = load_data_from_ods(sample_ods, str(db0))
+    eng0.dispose()
+    # Export JSON from that DB
+    json_file = tmp_path / "export.json"
+    import sqlite3
+    import sys
+
+    monkeypatch.setenv("PYTEST_DISABLE_PLUGIN_AUTOLOAD", "1")
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["main.py", "--export-json", str(json_file), "--db-url", f"sqlite:///{db0}"],
+    )
+    import main
+
+    main.main()
+    assert json_file.exists(), "JSON not created from DB"
+    # Now import back JSON into new DB via CLI
+    new_db = tmp_path / "imported.db"
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["main.py", "--import-json", str(json_file), "--db-url", f"sqlite:///{new_db}"],
+    )
+    main.main()
+    # Verify imported DB has tables
+    conn = sqlite3.connect(str(new_db))
+    tables = {
+        r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    }
+    conn.close()
+    assert "fountain_pens" in tables and "inks" in tables

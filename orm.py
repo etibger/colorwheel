@@ -152,4 +152,9 @@ def load_data_from_ods(ods_path: str, db_url: str):
 
     session.commit()
     session.close()
+    # Dispose engine to close all connections and avoid warnings
+    try:
+        engine.dispose()
+    except Exception:
+        pass
     return engine

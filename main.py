@@ -31,8 +31,7 @@ def generate_wheel_from_db(db_url: str, output_file: str) -> Path:
     draw = ImageDraw.Draw(img)
     # Load font
     try:
-        font = ImageFont.truetype("DejaVuSans.ttf", 16)
-        font_bold = ImageFont.truetype("DejaVuSans.ttf", 18)
+        font = font_bold = ImageFont.truetype("DejaVuSans.ttf", 16)
     except IOError:
         font = font_bold = ImageFont.load_default()
     # Draw elements
@@ -94,6 +93,12 @@ def parse_args():
         "--export-json",
         dest="export_json",
         help="Path to JSON file to export pens, inks, and setups",
+        default=None,
+    )
+    parser.add_argument(
+        "--import-json",
+        dest="import_json",
+        help="Path to JSON file to import pens, inks, and setups",
         default=None,
     )
     return parser.parse_args()
@@ -196,7 +201,13 @@ def main():
             json.dump(data, f, indent=2)
         logging.info(f"Exported data to {out_path}")
         return
-    # if requested, load data to SQL DB and exit
+    # Import JSON to SQL DB if requested
+    if args.import_json and args.db_url:
+        from ui_converters import json_to_db
+
+        json_to_db(args.import_json, args.db_url)
+        return
+    # Load data from ODS to SQL DB if requested
     if args.db_url:
         logging.info(f"Loading data from ODS to database at {args.db_url}")
         load_data_from_ods(args.data_file, args.db_url)
@@ -219,8 +230,7 @@ def main():
 
     # Try to load a nicer font, fallback if unavailable
     try:
-        font = ImageFont.truetype("DejaVuSans.ttf", 16)
-        font_bold = ImageFont.truetype("DejaVuSans.ttf", 18)
+        font = font_bold = ImageFont.truetype("DejaVuSans.ttf", 16)
     except IOError:
         font = font_bold = ImageFont.load_default()
 

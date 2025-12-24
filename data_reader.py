@@ -195,18 +195,3 @@ class DataReader:
             setup_id = int.from_bytes(hashlib.sha256(s_raw).digest(), "big")
             setups[setup_id] = PenSetup(id=setup_id, pen_id=pen_id, ink_id=ink_id)
         return setups
-
-    def load_setups(self) -> List[PenSetup]:
-        """
-        Convenience method: read raw data, create pen and ink objects,
-        and pair them into PenSetup instances.
-        """
-        logger.debug(
-            "Loading setups: read -> create_pens -> create_inks -> create_setups"
-        )
-        raw_rows = self.read()
-        pens = self.create_pens(raw_rows)
-        inks = self.create_inks(raw_rows)
-        setups = self.create_setups(raw_rows, pens, inks)
-        logger.info(f"Loaded {len(setups)} pen setups")
-        return setups

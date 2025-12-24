@@ -101,12 +101,24 @@ def json_to_db(in_path: str, out_path: str):
     data = json.loads(open(in_path, encoding="utf-8").read())
     # Convert numeric IDs to zero-padded hex strings for DB storage
     for p in data.get("pens", []):
-        p_id = p.get("id")
-        p["id"] = f"{int(p_id):064x}"
+        # normalize pen id: hex string or integer
+        raw_id = p.get("id")
+        if isinstance(raw_id, str):
+            pid = int(raw_id, 16)
+        else:
+            pid = int(raw_id)
+        p["id"] = f"{pid:064x}"
     # Normalize ink fields: convert IDs and parse srgb values
     for i in data.get("inks", []):
-        ink_id = i.get("id")
-        i["id"] = f"{int(ink_id):064x}"
+        raw_id = i.get("id")
+        if isinstance(raw_id, str):
+            try:
+                iid = int(raw_id, 16)
+            except ValueError:
+                iid = int(raw_id)
+        else:
+            iid = int(raw_id)
+        i["id"] = f"{iid:064x}"
         # srgb_* may be locale strings like '286,7'
         for key in ("srgb_h", "srgb_s", "srgb_v"):
             val = i.get(key)
@@ -114,17 +126,35 @@ def json_to_db(in_path: str, out_path: str):
                 i[key] = float(val.replace(",", "."))
             except Exception:
                 i[key] = None
-    # Pen setup IDs
+    # Pen setup IDs: convert id, pen_id, ink_id to zero-padded hex
     for s in data.get("setups", []):
-        # Convert setup id, pen_id, ink_id to hex strings
-        s_id = s.get("id")
-        s["id"] = f"{int(s_id):064x}"
-        # foreign keys
-        pen_id = s.get("pen_id")
-        ink_id = s.get("ink_id")
-        s["pen_id"] = f"{int(pen_id):064x}"
-        s["ink_id"] = f"{int(ink_id):064x}"
-    engine = init_db(f"sqlite:///{out_path}")
+        # Normalize setup id
+        raw_sid = s.get("id")
+        if isinstance(raw_sid, str):
+            try:
+                sid_int = int(raw_sid, 16)
+            except ValueError:
+                sid_int = int(raw_sid)
+        else:
+            sid_int = int(raw_sid)
+        s["id"] = f"{sid_int:064x}"
+        # Normalize foreign keys
+        for key in ("pen_id", "ink_id"):
+            raw_fk = s.get(key)
+            if isinstance(raw_fk, str):
+                try:
+                    fk_int = int(raw_fk, 16)
+                except ValueError:
+                    fk_int = int(raw_fk)
+            else:
+                fk_int = int(raw_fk)
+            s[key] = f"{fk_int:064x}"
+    # Initialize database, support full URLs or plain paths
+    if "://" in out_path:
+        db_url = out_path
+    else:
+        db_url = f"sqlite:///{out_path}"
+    engine = init_db(db_url)
     Session = sessionmaker(bind=engine)
     session = Session()
     from orm import FountainPen, Ink, PenSetup
