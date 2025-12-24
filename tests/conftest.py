@@ -1,12 +1,23 @@
 # conftest.py: Global pytest fixtures and warning filters
 # conftest.py: Global pytest fixtures and warning filters
-import warnings
+import gc
+import sqlite3
 import zipfile
 
 import pytest
 
-# Suppress all ResourceWarnings (e.g., unclosed DB connections) during tests
-warnings.filterwarnings("ignore", category=ResourceWarning)
+
+@pytest.fixture(autouse=True)
+def close_sqlite_connections():
+    """Auto-close any sqlite3.Connection objects after each test."""
+    yield
+    for obj in gc.get_objects():
+        if isinstance(obj, sqlite3.Connection):
+            try:
+                obj.close()
+            except Exception:
+                pass
+
 
 SAMPLE_CONTENT = """<?xml version="1.0"?>
 <office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
