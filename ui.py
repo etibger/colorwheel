@@ -2,8 +2,7 @@
 Textual-based interactive interface for data format conversion and color wheel output.
 """
 
-import datetime
-import json
+import argparse
 import logging
 import sys
 
@@ -18,48 +17,72 @@ from textual.widgets import (
     Static,
 )
 
-from main import generate_wheel_from_db
+from ui_converters import handle_conversion
 
-# Configure debug logging
-logging.basicConfig(
-    filename="colorwheel_debug.log",
-    level=logging.DEBUG,
-    format="%(asctime)s %(levelname)s %(message)s",
-)
-logging.debug("ui.py import start")
+
+def verbosity_to_loglevel(verbosity: int) -> int:
+    if verbosity <= 0:
+        return logging.ERROR
+    elif verbosity == 1:
+        return logging.WARNING
+    elif verbosity == 2:
+        return logging.INFO
+    else:
+        return logging.DEBUG
+
+
+def setup_logging(verbose: int) -> logging.Logger:
+    """Configure and return a logger based on verbosity count."""
+    level = verbosity_to_loglevel(verbose)
+    logger = logging.getLogger("colorwheel_ui")
+    logger.setLevel(level)
+    logger.propagate = False
+    # stderr handler: always show INFO or higher
+    err = logging.StreamHandler(sys.stderr)
+    err.setLevel(logging.INFO)
+    err.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+    # file handler: log up to verbose level
+    fh = logging.FileHandler("colorwheel_ui.log")
+    fh.setLevel(level)
+    fh.setFormatter(
+        logging.Formatter("%(asctime)s %(name)s %(levelname)s: %(message)s")
+    )
+    logger.addHandler(err)
+    logger.addHandler(fh)
+    logger.debug("Logging initialized at level %s", logging.getLevelName(level))
+    return logger
+
+
+def init_cli() -> tuple[int, logging.Logger]:
+    """Parse CLI args and configure logger."""
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="Increase verbosity (use -v, -vv)",
+    )
+    # parse_known_args allows downstream libraries (e.g. Textual)
+    # to receive their own flags
+    args, _ = parser.parse_known_args()
+    logger = setup_logging(args.verbose)
+    logger.debug("ui.py execution begins")
+    logger.debug("attempting to import textual modules")
+    return logger
+
+
+# Initialize CLI and logger
+logger = init_cli()
 try:
     from textual.app import App, ComposeResult
 
-    logging.debug("Imported textual modules successfully")
+    logger.debug("Imported textual modules successfully")
 except ImportError:
-    logging.error("'textual' library not found - install with 'pip install textual'.")
-    print(
-        "Error: 'textual' library is not installed. "
-        "Please install it with 'pip install textual'",
-        file=sys.stderr,
-    )
+    logger.error("'textual' library not found - install with 'pip install textual'.")
     sys.exit(1)
 
-# Simple startup debug
-print("[DEBUG] ui.py loaded", file=sys.stderr, flush=True)
-
-# Debug startup stages
-print("[DEBUG] ui.py execution begins", file=sys.stderr, flush=True)
-print("[DEBUG] attempting to import textual modules", file=sys.stderr, flush=True)
-
-# Debug logger for startup stages
-_debug_file = open("colorwheel_debug.log", "a", encoding="utf-8")
-
-
-def debug(msg: str) -> None:
-    ts = datetime.datetime.now().isoformat()
-    _debug_file.write(f"{ts} [DEBUG] {msg}\n")
-    _debug_file.flush()
-
-
-debug("Module imported")
-print("[DEBUG] Module imported", flush=True)
-print("[DEBUG] Module imported")
+logger.debug("Module imported")
 
 
 class ConverterApp(App):
@@ -78,15 +101,12 @@ class ConverterApp(App):
     CSS = None
 
     def __init__(self, *args, **kwargs):
-        debug("ConverterApp.__init__ start")
-        print("[DEBUG] ConverterApp.__init__ start")
+        logger.debug("ConverterApp.__init__ start")
         super().__init__(*args, **kwargs)
-        debug("ConverterApp.__init__ end")
-        print("[DEBUG] ConverterApp.__init__ end")
+        logger.debug("ConverterApp.__init__ end")
 
     def compose(self) -> ComposeResult:
-        debug("compose() start")
-        print("[DEBUG] compose() start")
+        logger.debug("compose() start")
         yield Header(show_clock=True)
         # Help instructions for navigation
         yield Static("Use Tab to navigate and Enter to select.", id="help_text")
@@ -107,37 +127,32 @@ class ConverterApp(App):
         # Output file selection
         yield Static("Output file path:", id="label_output_path")
         yield Input(placeholder="e.g. output.json or wheel.png", id="output_path")
-        debug("yielding Run button")
-        print("[DEBUG] yielding Run button")
+        logger.debug("yielding Run button")
         yield Button("Run", id="run")
-        debug("yielding Log console")
-        print("[DEBUG] yielding Log console")
+        logger.debug("yielding Log console")
         # Logger panel for events (use 'logger' id to avoid shadowing App.console)
         yield Log(id="logger", highlight=False)
         # Footer at bottom
         yield Footer()
 
     def on_mount(self) -> None:
-        debug("on_mount() start")
-        print("[DEBUG] on_mount() start")
+        logger.debug("on_mount() start")
         # Retrieve log widget
         self.log_widget = self.query_one("#logger", Log)
         # Open GUI event log file
         self.log_file = open("colorwheel_textual.log", "a", encoding="utf-8")
-        debug("Opened colorwheel_textual.log")
-        print("[DEBUG] Opened colorwheel_textual.log")
+        logger.debug("Opened colorwheel_textual.log")
         # Mark as mounted and avoid early log rendering
         self._mounted = True
-        debug("on_mount() complete")
-        print("[DEBUG] on_mount() complete")
+        logger.debug("on_mount() complete")
 
     def on_unmount(self) -> None:
         """Close log file on exit."""
-        debug("on_unmount() start")
+        logger.debug("on_unmount() start")
         # Safely close GUI event log file
         if hasattr(self, "log_file") and self.log_file:
             self.log_file.close()
-            debug("Closed colorwheel_textual.log")
+            logger.debug("Closed colorwheel_textual.log")
 
     def log_event(self, message: str) -> None:
         """Write message to console and log file."""
@@ -155,9 +170,9 @@ class ConverterApp(App):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle the Run button press."""
-        debug(f"on_button_pressed: id={event.button.id}")
+        logger.debug(f"on_button_pressed: id={event.button.id}")
         if event.button.id != "run":
-            debug("on_button_pressed: ignored non-run")
+            logger.debug("on_button_pressed: ignored non-run")
             return
         # Retrieve selected formats from RadioButtons
         input_choice = next(
@@ -173,71 +188,25 @@ class ConverterApp(App):
             f"Converting from {input_choice}:{input_path} "
             f"to {output_choice}:{output_path}..."
         )
-        # Perform conversion: SQL DB -> PNG
         try:
-            debug("Starting conversion block")
-            # SQL DB -> PNG
-            if input_choice == "SQL DB" and output_choice == "PNG":
-                generate_wheel_from_db(input_path, output_path)
-                self.log_event(f"Generated PNG at {output_path}")
-            # ODS -> JSON
-            elif input_choice == "ODS" and output_choice == "JSON":
-                from data_reader import DataReader
-
-                reader = DataReader(input_path)
-                pens = [
-                    {
-                        "id": p.id,
-                        "brand": p.brand,
-                        "name": p.name,
-                        "nib_size": p.nib_size,
-                        "body_color": p.body_color,
-                    }
-                    for p in reader.pens.values()
-                ]
-                inks = [
-                    {
-                        "id": i.id,
-                        "brand": i.brand,
-                        "name": i.name,
-                        "srgb_h": i.color_srgb[0],
-                        "srgb_s": i.color_srgb[1],
-                        "srgb_v": i.color_srgb[2],
-                        "rgb_hex": i.color_rgb_hex,
-                    }
-                    for i in reader.inks.values()
-                ]
-                setups = [
-                    {"id": s.id, "pen_id": s.pen_id, "ink_id": s.ink_id}
-                    for s in reader.setups.values()
-                ]
-                data = {"pens": pens, "inks": inks, "setups": setups}
-                with open(output_path, "w", encoding="utf-8") as f:
-                    json.dump(data, f, indent=2)
-                self.log_event(f"Exported JSON at {output_path}")
-            else:
-                self.log_event("Selected conversion not implemented yet.")
+            logger.debug("Starting conversion dispatch")
+            handle_conversion(input_choice, output_choice, input_path, output_path)
         except Exception as e:
-            debug(f"Error during conversion: {e}")
-            self.log_event(f"Error during conversion: {e}")
+            logger.debug(f"Conversion error: {e}")
+            self.log_event(f"Error: {e}")
 
 
 if __name__ == "__main__":
     # Entry point: debug start
-    debug("__main__ start")
-    print("[DEBUG] __main__ start", flush=True)
+    logger.info("__main__ start")
     app = ConverterApp()
     # Run the app and capture any exceptions
     try:
-        debug("Calling app.run()")
-        print("[DEBUG] Calling app.run()", flush=True)
+        logger.debug("Calling app.run()")
         app.run()
-        debug("app.run() completed")
-        print("[DEBUG] app.run() completed", flush=True)
+        logger.debug("app.run() completed")
     except Exception as e:
-        debug(f"__main__ exception: {e}")
-        print(f"[DEBUG] __main__ exception: {e}", flush=True)
+        logger.debug(f"__main__ exception: {e}")
         raise
     finally:
-        debug("__main__ end")
-        print("[DEBUG] __main__ end", flush=True)
+        logger.info("__main__ end")

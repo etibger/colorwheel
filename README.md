@@ -83,6 +83,15 @@ The project includes a Textual-based interactive converter interface implemented
 
 Example screenshot:
 <img src="data/ui.png" alt="Interactive Converter UI" width="600" />
+
+### UI CLI & Logging
+
+- **Usage**: launch with `python ui.py [options]` or `uv run ui.py [options]`.
+- **-v/--verbose**: increase verbosity level (use `-v` for INFO, `-vv` for DEBUG).
+- **Logging** is set up via `setup_logging()` in `ui.py`:
+  - Logs at INFO level to stderr by default (e.g. conversion start/errors).
+  - If verbosity ≥2, DEBUG-level messages are also written to `colorwheel_ui.log`.
+  - The logger name is `colorwheel_ui` and uses separate handlers for console and file.
 ```
 
 Options:
@@ -198,6 +207,22 @@ for pen in pens:
    ```bash
    uv run flake8
    ```
+
+## Testing
+
+- The test suite uses `pytest` under `tests/`.
+- **UI tests** (`tests/test_ui_app.py`) launch ConverterApp in headless mode and verify:
+  - Smoke test clicks Run without errors
+  - End-to-end conversion flows for supported format combinations
+- **Converter function tests** (`tests/test_ui_conversion.py`) exercise each handler in `ui_converters.py`:
+  - Database-to-PNG and ODS-to-PNG image comparisons
+  - ODS/DB ↔ JSON round-trip consistency
+  - File existence and schema validations
+- Run all tests with:
+  ```bash
+  pytest tests
+  ```
+
 4. Set up Git pre-commit hooks:
    ```bash
    # Install the git hook scripts

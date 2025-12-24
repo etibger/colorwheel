@@ -4,9 +4,9 @@ SQLAlchemy ORM for FountainPens, Inks, and PenSetups.
 
 from sqlalchemy import (
     Column,
-    String,
     Float,
     ForeignKey,
+    String,
     create_engine,
 )
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
@@ -84,11 +84,12 @@ def load_data_from_ods(ods_path: str, db_url: str):
     """
     # Interpret db_url as filesystem path if no scheme or sqlite URL
     from pathlib import Path as _Path
+
     db_file = None
     if db_url.startswith("sqlite:///"):
         # strip sqlite:/// prefix
-        db_file = _Path(db_url[len("sqlite:///"):])
-    elif '://' not in db_url:
+        db_file = _Path(db_url[len("sqlite:///") :])
+    elif "://" not in db_url:
         db_file = _Path(db_url)
         db_url = f"sqlite:///{db_file}"
     # Ensure fresh database file for SQLite
