@@ -1,7 +1,6 @@
-# Color Wheel Generator
+See the generated HTML documentation at:
 
-Generates a high-quality RGB color wheel image with customizable markers
-and a side legend detailing each color.
+  docs/released/html/index.html
 
 ## Features
 

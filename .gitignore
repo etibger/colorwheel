@@ -19,3 +19,7 @@ colorwheel_textual.log
 colorwheel_debug.log
 colorwheel_ui.log
 **tmp*
+
+# Sphinx build directories
+docs/_build/
+docs/_autosummary/
