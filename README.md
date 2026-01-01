@@ -4,6 +4,8 @@ The full HTML documentation is available under `docs/released/html`. View it her
 
 - [View the colorwheel documentation](docs/released/html/index.html)
 
+**Note**: if you update the ODS data source (`data/golden.ods`), run `make regenerate-golden` to refresh the reference files (`data/golden.db`, `data/golden.json`, `data/golden.png`) so tests will pass.
+
 ## Features
 
 - Smooth HSV-based color wheel rendering

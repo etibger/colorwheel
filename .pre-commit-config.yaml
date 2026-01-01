@@ -21,10 +21,11 @@ repos:
         stages: [pre-commit]
         pass_filenames: false
         always_run: true
-      - id: docs-html
-        name: Build and verify HTML docs
-        entry: bash -lc "make release-docs && git diff --exit-code docs/released/html"
-        language: system
-        stages: [pre-commit]
-        pass_filenames: false
-        always_run: true
+      #   This brings pain to keep clean. e.g. docs/released/html/searchindex.js has diffs upoon regeneration
+      # - id: docs-html
+      #   name: Build and verify HTML docs
+      #   entry: bash -lc "make release-docs && git diff --exit-code docs/released/html"
+      #   language: system
+      #   stages: [pre-commit]
+      #   pass_filenames: false
+      #   always_run: true

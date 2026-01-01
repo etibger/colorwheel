@@ -56,6 +56,12 @@ with customizable markers and a side legend detailing each color.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">use</span><span class="o">-</span><span class="n">data</span> <span class="o">--</span><span class="n">data</span><span class="o">-</span><span class="n">file</span> <span class="n">data</span><span class="o">/</span><span class="n">golden</span><span class="o">.</span><span class="n">ods</span>
 </pre></div>
 </div>
+<p>Note: after updating <cite>data/golden.ods</cite>, run:</p>
+<blockquote>
+<div><p>make regenerate-golden
+make test
+to regenerate golden reference files and ensure tests pass.</p>
+</div></blockquote>
 </section>
 <section id="documentation">
 <h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h2>

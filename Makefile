@@ -3,16 +3,17 @@
 # Show help for available make targets
 help:
 	@echo "Available make targets:"
-	@echo "  help            Show this help message"
-	@echo "  clean           Remove caches and generated files"
-	@echo "  test            Run pytest"
-	@echo "  all             Clean and test (clean + test)"
-	@echo "  coverage        Run pytest with coverage report"
-	@echo "  html_coverage   Run pytest with HTML coverage report"
-	@echo "  docs-html       Build HTML documentation via Sphinx"
-	@echo "  docs-man        Build man pages via Sphinx"
-	@echo "  docs-pdf        Build PDF documentation via Sphinx via LaTeX"
-	@echo "  release-docs    Copy built HTML docs to docs/released/html"
+	@echo "  help              Show this help message"
+	@echo "  clean             Remove caches and generated files"
+	@echo "  test              Run pytest"
+	@echo "  all               Clean and test (clean + test)"
+	@echo "  coverage          Run pytest with coverage report"
+	@echo "  html_coverage     Run pytest with HTML coverage report"
+	@echo "  docs-html         Build HTML documentation via Sphinx"
+	@echo "  docs-man          Build man pages via Sphinx"
+	@echo "  docs-pdf          Build PDF documentation via Sphinx via LaTeX"
+	@echo "  release-docs      Copy built HTML docs to docs/released/html"
+	@echo "  regenerate-golden Regenerating golden files from data/golden.ods"
 
 test:
 	@echo "Running pytest..."
@@ -55,3 +56,11 @@ release-docs: docs-html
 	@echo "Copying built HTML docs to docs/released/html"
 	@rsync -a --delete --exclude='.doctrees' docs/_build/html/ docs/released/html/
 	@rm -rf docs/released/html/.doctrees
+
+## Regenerate golden reference files from the ODS source
+regenerate-golden:
+	@echo "Regenerating golden files from data/golden.ods"
+	@uv run main.py --data-file data/golden.ods --db-url sqlite:///data/golden.db
+	@uv run main.py --data-file data/golden.ods --export-json data/golden.json
+	@uv run main.py --data-file data/golden.ods --use-data -o data/golden.png
+	@echo "Golden files regenerated: data/golden.db, data/golden.json, data/golden.png"

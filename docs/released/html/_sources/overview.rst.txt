@@ -23,6 +23,12 @@ Run the CLI to generate an image::
 To use data from an ODS file::
 
   python main.py --use-data --data-file data/golden.ods
+  
+Note: after updating `data/golden.ods`, run:
+
+  make regenerate-golden
+  make test
+  to regenerate golden reference files and ensure tests pass.
 
 Documentation
 -------------
