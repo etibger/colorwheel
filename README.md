@@ -2,7 +2,7 @@
 
 The full HTML documentation is available under `docs/released/html`. View it here:
 
-- [View the colorwheel documentation](docs/released/html/index.html)
+- [View the colorwheel documentation](https://etibger.github.io/colorwheel/released/html/index.html)
 
 **Note**: if you update the ODS data source (`data/golden.ods`), run `make regenerate-golden` to refresh the reference files (`data/golden.db`, `data/golden.json`, `data/golden.png`) so tests will pass.
 
