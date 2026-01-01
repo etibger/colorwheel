@@ -1,6 +1,8 @@
-See the generated HTML documentation at:
+## Documentation
 
-  docs/released/html/index.html
+The full HTML documentation is available under `docs/released/html`. View it here:
+
+- [View the colorwheel documentation](docs/released/html/index.html)
 
 ## Features
 
