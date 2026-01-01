@@ -1,4 +1,18 @@
-.PHONY: clean test all docs-html docs-man docs-pdf release-docs
+.PHONY: help clean test all coverage html_coverage docs-html docs-man docs-pdf release-docs
+
+# Show help for available make targets
+help:
+	@echo "Available make targets:"
+	@echo "  help            Show this help message"
+	@echo "  clean           Remove caches and generated files"
+	@echo "  test            Run pytest"
+	@echo "  all             Clean and test (clean + test)"
+	@echo "  coverage        Run pytest with coverage report"
+	@echo "  html_coverage   Run pytest with HTML coverage report"
+	@echo "  docs-html       Build HTML documentation via Sphinx"
+	@echo "  docs-man        Build man pages via Sphinx"
+	@echo "  docs-pdf        Build PDF documentation via Sphinx via LaTeX"
+	@echo "  release-docs    Copy built HTML docs to docs/released/html"
 
 test:
 	@echo "Running pytest..."

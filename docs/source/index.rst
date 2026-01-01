@@ -6,12 +6,20 @@
 colorwheel documentation
 ========================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+Welcome to the colorwheel project documentation!
+
+This documentation covers:
+
+- Overview and usage instructions
+- Configuration and data integration
+- API reference generated from source code
+
+Use the table of contents below to navigate.
 
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   overview
+   modules
