@@ -9,8 +9,9 @@
 # documentation root, use os.path.abspath to make it absolute.
 import os
 import sys
+
 # Add project root to sys.path, relative to this conf.py file
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -22,9 +23,12 @@ author = "Tibor Gerlai"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
+# conf.py
+
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.githubpages",
 ]
 autosummary_generate = True  # auto-generate summary tables for modules
 

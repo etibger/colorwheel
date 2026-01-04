@@ -35,25 +35,173 @@
   <section id="module-reference">
 <h1>Module Reference<a class="headerlink" href="#module-reference" title="Link to this heading">¶</a></h1>
 <p>This section contains the API reference for each module.</p>
-<p id="module-color_utils">Module for color conversion utilities.</p>
+<p id="module-color_utils">This module provides utilities for converting between various color representations
+and color spaces:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/SRGB">sRGB</a>: Standard RGB color space.</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/HSL_and_HSV">HSV</a>: Hue, Saturation, Value.</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/HSL_and_HSV">HSL</a>: Hue, Saturation, Lightness.</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Color_space#Oklab">Oklab</a>: Perceptual color space.</p></li>
+</ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="color_utils.hex_to_rgb">
 <span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">hex_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.hex_to_rgb" title="Link to this definition">¶</a></dt>
-<dd><p>Convert a hex color string (e.g., ‘#RRGGBB’) to an RGB tuple.</p>
+<dd><p>Convert a hexadecimal color code to an integer RGB tuple in sRGB space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_color</strong> (<em>str</em>) – Hex color code in <code class="docutils literal notranslate"><span class="pre">#RRGGBB</span></code> format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>RGB tuple with integer components [0..255].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.hex_to_rgbf">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">hex_to_rgbf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.hex_to_rgbf" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a hexadecimal color code to a normalized RGB tuple in [0..1].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_color</strong> (<em>str</em>) – Hex color code in <code class="docutils literal notranslate"><span class="pre">#RRGGBB</span></code> format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>RGB tuple with float components in [0..1].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.hsl_to_rgb">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">hsl_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hsl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.hsl_to_rgb" title="Link to this definition">¶</a></dt>
+<dd><p>Convert HSL (Hue, Saturation, Lightness) to a normalized RGB tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hsl</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – Tuple <code class="docutils literal notranslate"><span class="pre">(h,</span> <span class="pre">s,</span> <span class="pre">l)</span></code> where hue is in degrees [0..360),
+saturation and lightness in [0..1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>RGB tuple with float components in [0..1].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="color_utils.hsv_to_xy">
 <span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">hsv_to_xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.hsv_to_xy" title="Link to this definition">¶</a></dt>
-<dd><p>Map hue (angle) and saturation (radius fraction) to (x,y) coordinates on the wheel.
-h: hue fraction [0,1], s: saturation fraction [0,1],
-radius: wheel radius, center: (x0, y0)</p>
+<dd><p>Map HSV hue and saturation to Cartesian coordinates on a color wheel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h</strong> (<em>float</em>) – <p>Hue fraction in [0..1] (<a class="reference external" href="https://en.wikipedia.org/wiki/HSL_and_HSV">HSV</a>).</p>
+</p></li>
+<li><p><strong>s</strong> (<em>float</em>) – Saturation fraction in [0..1].</p></li>
+<li><p><strong>radius</strong> (<em>int</em>) – Radius of the color wheel in pixels.</p></li>
+<li><p><strong>center</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – Center coordinates (x0, y0) of the color wheel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(x, y) pixel coordinates corresponding to the HSV position.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.oklab_to_rgb">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">oklab_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oklab</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.oklab_to_rgb" title="Link to this definition">¶</a></dt>
+<dd><p>Convert from Oklab perceptual color space back to sRGB.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>oklab</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – Tuple <code class="docutils literal notranslate"><span class="pre">(L,</span> <span class="pre">a,</span> <span class="pre">b)</span></code> in Oklab space.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>RGB tuple with float components in [0..1] (sRGB).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.rgb_to_hex">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">rgb_to_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#color_utils.rgb_to_hex" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a normalized RGB tuple in [0..1] to a hexadecimal color code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rgb</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – RGB tuple with float components in [0..1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hex color code in <code class="docutils literal notranslate"><span class="pre">#RRGGBB</span></code> format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.rgb_to_hsl">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">rgb_to_hsl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.rgb_to_hsl" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a normalized RGB tuple to HSL (Hue, Saturation, Lightness).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rgb</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – RGB tuple with float components in [0..1].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple <code class="docutils literal notranslate"><span class="pre">(h,</span> <span class="pre">s,</span> <span class="pre">l)</span></code> where hue is in degrees [0..360),
+saturation and lightness in [0..1].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="color_utils.rgb_to_hsv">
 <span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">rgb_to_hsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.rgb_to_hsv" title="Link to this definition">¶</a></dt>
-<dd><p>Convert an RGB tuple (0-255) to HSV components scaled [0,1].</p>
+<dd><p>Convert an integer RGB tuple to HSV (Hue, Saturation, Value) components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rgb</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – RGB tuple with integer components [0..255].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple <code class="docutils literal notranslate"><span class="pre">(h,</span> <span class="pre">s,</span> <span class="pre">v)</span></code> where hue, saturation, and value are in [0..1].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.rgb_to_oklab">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">rgb_to_oklab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rgb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.rgb_to_oklab" title="Link to this definition">¶</a></dt>
+<dd><p>Convert an sRGB tuple to the Oklab perceptual color space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rgb</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – RGB tuple with float components in [0..1] (sRGB).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple <code class="docutils literal notranslate"><span class="pre">(L,</span> <span class="pre">a,</span> <span class="pre">b)</span></code> in Oklab space.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p id="module-data_reader">Module for reading pen and ink data from an ODS spreadsheet.</p>
@@ -517,8 +665,14 @@ db_url: Database URL (e.g., ‘sqlite:///pens.db’).</p>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Module Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.hex_to_rgb"><code class="docutils literal notranslate"><span class="pre">hex_to_rgb()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.hex_to_rgbf"><code class="docutils literal notranslate"><span class="pre">hex_to_rgbf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.hsl_to_rgb"><code class="docutils literal notranslate"><span class="pre">hsl_to_rgb()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.hsv_to_xy"><code class="docutils literal notranslate"><span class="pre">hsv_to_xy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.oklab_to_rgb"><code class="docutils literal notranslate"><span class="pre">oklab_to_rgb()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hex"><code class="docutils literal notranslate"><span class="pre">rgb_to_hex()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hsl"><code class="docutils literal notranslate"><span class="pre">rgb_to_hsl()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hsv"><code class="docutils literal notranslate"><span class="pre">rgb_to_hsv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_oklab"><code class="docutils literal notranslate"><span class="pre">rgb_to_oklab()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data_reader.DataReader"><code class="docutils literal notranslate"><span class="pre">DataReader</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data_reader.FountainPen"><code class="docutils literal notranslate"><span class="pre">FountainPen</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data_reader.Ink"><code class="docutils literal notranslate"><span class="pre">Ink</span></code></a></li>
