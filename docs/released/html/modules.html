@@ -204,38 +204,94 @@ saturation and lightness in [0..1].</p>
 </dl>
 </dd></dl>
 
-<p id="module-data_reader">Module for reading pen and ink data from an ODS spreadsheet.</p>
+<p id="module-data_reader">This module parses an OpenDocument Spreadsheet (ODS) to extract fountain pen
+and ink information into Python data structures.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="data_reader.DataReader">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">data_reader.</span></span><span class="sig-name descname"><span class="pre">DataReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_reader.DataReader" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Reads fountain pen and ink data from an ODS file.
-Expects a sheet with columns: Type, Brand, Name, Details, Color
-where Type is ‘pen’ or ‘ink’, Details is nib size for pens.</p>
+<p>Read fountain pen and ink data from an ODS spreadsheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – Path to the ODS file.</p>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>pens</strong> – Mapping of pen_id to FountainPen instances.</p></li>
+<li><p><strong>inks</strong> – Mapping of ink_id to Ink instances.</p></li>
+<li><p><strong>setups</strong> – Mapping of setup_id to PenSetup instances.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="data_reader.DataReader.create_inks">
 <span class="sig-name descname"><span class="pre">create_inks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#data_reader.Ink" title="data_reader.Ink"><span class="pre">Ink</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#data_reader.DataReader.create_inks" title="Link to this definition">¶</a></dt>
-<dd><p>Create Ink objects from raw data rows, keyed by SHA-256 id.</p>
+<dd><p>Instantiate Ink objects from raw row data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_rows</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>,</em><em>str</em><em>]</em><em>]</em>) – Parsed raw row dictionaries.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mapping of ink_id to Ink instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[int, <a class="reference internal" href="#data_reader.Ink" title="data_reader.Ink">Ink</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="data_reader.DataReader.create_pens">
 <span class="sig-name descname"><span class="pre">create_pens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#data_reader.FountainPen" title="data_reader.FountainPen"><span class="pre">FountainPen</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#data_reader.DataReader.create_pens" title="Link to this definition">¶</a></dt>
-<dd><p>Create FountainPen objects from raw data rows.</p>
+<dd><p>Instantiate FountainPen objects from raw row data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_rows</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>,</em><em>str</em><em>]</em><em>]</em>) – Parsed raw row dictionaries.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mapping of pen_id to FountainPen instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[int, <a class="reference internal" href="#data_reader.FountainPen" title="data_reader.FountainPen">FountainPen</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="data_reader.DataReader.create_setups">
 <span class="sig-name descname"><span class="pre">create_setups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#data_reader.FountainPen" title="data_reader.FountainPen"><span class="pre">FountainPen</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#data_reader.Ink" title="data_reader.Ink"><span class="pre">Ink</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#data_reader.PenSetup" title="data_reader.PenSetup"><span class="pre">PenSetup</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#data_reader.DataReader.create_setups" title="Link to this definition">¶</a></dt>
-<dd><p>Create PenSetup objects keyed by SHA-256 id, mapping raw row pairs.</p>
+<dd><p>Instantiate PenSetup objects linking pens to inks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_rows</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>,</em><em>str</em><em>]</em><em>]</em>) – Parsed raw row dictionaries.</p></li>
+<li><p><strong>pens</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><a class="reference internal" href="#data_reader.FountainPen" title="data_reader.FountainPen"><em>FountainPen</em></a><em>]</em>) – Mapping of pen_id to FountainPen.</p></li>
+<li><p><strong>inks</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><a class="reference internal" href="#data_reader.Ink" title="data_reader.Ink"><em>Ink</em></a><em>]</em>) – Mapping of ink_id to Ink.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mapping of setup_id to PenSetup instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[int, <a class="reference internal" href="#data_reader.PenSetup" title="data_reader.PenSetup">PenSetup</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="data_reader.DataReader.read">
 <span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#data_reader.DataReader.read" title="Link to this definition">¶</a></dt>
-<dd><p>Parse the ODS and return raw rows as dicts.
-Each dict has keys: pen_brand, pen_name, pen_body_color, nib_size, ink_brand,
-color_name, srgb_h, srgb_s, srgb_v, rgb_hex.</p>
+<dd><p>Parse the ODS spreadsheet into raw row dictionaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of row dictionaries with keys:
+pen_brand, pen_name, pen_body_color, nib_size,
+ink_brand, color_name, srgb_h, srgb_s, srgb_v, rgb_hex</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict[str,str]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -244,6 +300,18 @@ color_name, srgb_h, srgb_s, srgb_v, rgb_hex.</p>
 <dt class="sig sig-object py" id="data_reader.FountainPen">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">data_reader.</span></span><span class="sig-name descname"><span class="pre">FountainPen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nib_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_reader.FountainPen" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a fountain pen entry extracted from ODS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Unique pen identifier (SHA-256 hash).</p></li>
+<li><p><strong>brand</strong> (<em>str</em>) – Manufacturer or brand of the pen.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Model name of the pen.</p></li>
+<li><p><strong>nib_size</strong> (<em>str</em>) – Nib size descriptor (e.g., ‘M’, ‘F’).</p></li>
+<li><p><strong>body_color</strong> (<em>str</em>) – Hex color code of the pen body.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="data_reader.FountainPen.body_color">
 <span class="sig-name descname"><span class="pre">body_color</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#data_reader.FountainPen.body_color" title="Link to this definition">¶</a></dt>
@@ -275,6 +343,18 @@ color_name, srgb_h, srgb_s, srgb_v, rgb_hex.</p>
 <dt class="sig sig-object py" id="data_reader.Ink">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">data_reader.</span></span><span class="sig-name descname"><span class="pre">Ink</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brand</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_srgb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_rgb_hex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_reader.Ink" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an ink entry extracted from ODS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Unique ink identifier (SHA-256 hash).</p></li>
+<li><p><strong>brand</strong> (<em>str</em>) – Manufacturer or brand of the ink.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the ink color.</p></li>
+<li><p><strong>color_srgb</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of HSV components as strings.</p></li>
+<li><p><strong>color_rgb_hex</strong> (<em>str</em>) – Hex color code of the ink.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="data_reader.Ink.brand">
 <span class="sig-name descname"><span class="pre">brand</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#data_reader.Ink.brand" title="Link to this definition">¶</a></dt>
@@ -306,7 +386,16 @@ color_name, srgb_h, srgb_s, srgb_v, rgb_hex.</p>
 <dt class="sig sig-object py" id="data_reader.PenSetup">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">data_reader.</span></span><span class="sig-name descname"><span class="pre">PenSetup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pen_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ink_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_reader.PenSetup" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Represents a pen+ink pairing by their IDs.</p>
+<p>Represents a pen and ink pairing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – Unique setup identifier (SHA-256 hash).</p></li>
+<li><p><strong>pen_id</strong> (<em>int</em>) – Identifier of the associated FountainPen.</p></li>
+<li><p><strong>ink_id</strong> (<em>int</em>) – Identifier of the associated Ink.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="data_reader.PenSetup.id">
 <span class="sig-name descname"><span class="pre">id</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#data_reader.PenSetup.id" title="Link to this definition">¶</a></dt>
@@ -324,29 +413,80 @@ color_name, srgb_h, srgb_s, srgb_v, rgb_hex.</p>
 
 </dd></dl>
 
-<p id="module-draw">Module for drawing the color wheel, markers, and legend.</p>
+<p id="module-draw">This module provides functions to render a color wheel, annotate markers,
+and create a legend in the generated image.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="draw.draw_color_wheel">
 <span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_color_wheel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#draw.draw_color_wheel" title="Link to this definition">¶</a></dt>
-<dd><p>Draw the color wheel background on the image.</p>
+<dd><p>Draw the color wheel background on the provided image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>img</strong> (<em>PIL.Image.Image</em>) – PIL Image instance (mode ‘RGB’) to render the wheel onto.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="draw.draw_legend">
 <span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageDraw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_positions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_bold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#draw.draw_legend" title="Link to this definition">¶</a></dt>
-<dd><p>Draw the legend for the markers.</p>
+<dd><p>Draw a legend panel showing marker swatches and labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>draw</strong> (<em>PIL.ImageDraw.ImageDraw</em>) – Pillow ImageDraw object used to draw shapes and text.</p></li>
+<li><p><strong>marker_positions</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>str</em><em>, </em><em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – List of marker data from draw_markers.</p></li>
+<li><p><strong>font</strong> (<em>PIL.ImageFont.ImageFont</em>) – PIL ImageFont for regular text.</p></li>
+<li><p><strong>font_bold</strong> (<em>PIL.ImageFont.ImageFont</em>) – PIL ImageFont for bold headings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="draw.draw_markers">
 <span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_markers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageDraw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_bold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#draw.draw_markers" title="Link to this definition">¶</a></dt>
-<dd><p>Draw markers and number labels, return positions.</p>
+<dd><p>Draw numbered markers on the color wheel and return their data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>draw</strong> (<em>PIL.ImageDraw.ImageDraw</em>) – Pillow ImageDraw object used to draw shapes and text.</p></li>
+<li><p><strong>marker_colors</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em>) – List of (name, hex_color) tuples for each marker.</p></li>
+<li><p><strong>font_bold</strong> (<em>PIL.ImageFont.ImageFont</em>) – PIL ImageFont for drawing bold labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tuples (index, name, hex_color, rgb_tuple, x, y).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple[int, str, str, tuple[int,int,int], int, int]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function" id="module-main">
 <dt class="sig sig-object py" id="main.generate_wheel_from_db">
 <span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_wheel_from_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#main.generate_wheel_from_db" title="Link to this definition">¶</a></dt>
-<dd><p>Generate a color wheel PNG from inks stored in the database.</p>
+<dd><p>Generate a color wheel image (PNG) based on inks in a database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_url</strong> (<em>str</em>) – SQLAlchemy database URL or path to SQLite file.</p></li>
+<li><p><strong>output_file</strong> (<em>str</em>) – Filesystem path to write the generated PNG.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path object pointing to the saved image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

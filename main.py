@@ -14,7 +14,14 @@ from orm import FountainPen, Ink, PenSetup, load_data_from_ods
 
 def generate_wheel_from_db(db_url: str, output_file: str) -> Path:
     """
-    Generate a color wheel PNG from inks stored in the database.
+    Generate a color wheel image (PNG) based on inks in a database.
+
+    :param db_url: SQLAlchemy database URL or path to SQLite file.
+    :type db_url: str
+    :param output_file: Filesystem path to write the generated PNG.
+    :type output_file: str
+    :returns: Path object pointing to the saved image.
+    :rtype: pathlib.Path
     """
     # Normalize SQLite URL
     if "://" not in db_url:

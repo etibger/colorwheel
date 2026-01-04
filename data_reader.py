@@ -1,12 +1,17 @@
 """
-Module for reading pen and ink data from an ODS spreadsheet.
+.. module:: data_reader
+   :noindex:
+   :synopsis: Read pen and ink data from an ODS spreadsheet.
+
+This module parses an OpenDocument Spreadsheet (ODS) to extract fountain pen
+and ink information into Python data structures.
 """
 
 import hashlib
 import logging
 import xml.etree.ElementTree as ET
 import zipfile
-from dataclasses import dataclass
+from dataclasses import dataclass  # used for data models
 from typing import Dict, List
 
 # set up module logger
@@ -15,6 +20,20 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class FountainPen:
+    """
+    Represents a fountain pen entry extracted from ODS.
+
+    :param id: Unique pen identifier (SHA-256 hash).
+    :type id: int
+    :param brand: Manufacturer or brand of the pen.
+    :type brand: str
+    :param name: Model name of the pen.
+    :type name: str
+    :param nib_size: Nib size descriptor (e.g., 'M', 'F').
+    :type nib_size: str
+    :param body_color: Hex color code of the pen body.
+    :type body_color: str
+    """
     id: int
     brand: str
     name: str
@@ -22,8 +41,23 @@ class FountainPen:
     body_color: str
 
 
+
 @dataclass
 class Ink:
+    """
+    Represents an ink entry extracted from ODS.
+
+    :param id: Unique ink identifier (SHA-256 hash).
+    :type id: int
+    :param brand: Manufacturer or brand of the ink.
+    :type brand: str
+    :param name: Name of the ink color.
+    :type name: str
+    :param color_srgb: List of HSV components as strings.
+    :type color_srgb: list[str]
+    :param color_rgb_hex: Hex color code of the ink.
+    :type color_rgb_hex: str
+    """
     id: int
     brand: str
     name: str
@@ -31,20 +65,34 @@ class Ink:
     color_rgb_hex: str
 
 
+
 @dataclass
 class PenSetup:
-    """Represents a pen+ink pairing by their IDs."""
+    """
+    Represents a pen and ink pairing.
 
+    :param id: Unique setup identifier (SHA-256 hash).
+    :type id: int
+    :param pen_id: Identifier of the associated FountainPen.
+    :type pen_id: int
+    :param ink_id: Identifier of the associated Ink.
+    :type ink_id: int
+    """
     id: int
     pen_id: int
     ink_id: int
 
 
+
 class DataReader:
     """
-    Reads fountain pen and ink data from an ODS file.
-    Expects a sheet with columns: Type, Brand, Name, Details, Color
-    where Type is 'pen' or 'ink', Details is nib size for pens.
+    Read fountain pen and ink data from an ODS spreadsheet.
+
+    :param filepath: Path to the ODS file.
+    :type filepath: str
+    :ivar pens: Mapping of pen_id to FountainPen instances.
+    :ivar inks: Mapping of ink_id to Ink instances.
+    :ivar setups: Mapping of setup_id to PenSetup instances.
     """
 
     def __init__(self, filepath: str):
@@ -56,15 +104,24 @@ class DataReader:
         self.setups = self.create_setups(self.raw_rows, self.pens, self.inks)
 
     def _get_content_xml(self) -> ET.Element:
+        """
+        Extract and parse the ODS content.xml file.
+
+        :returns: Root Element of the parsed XML tree.
+        :rtype: xml.etree.ElementTree.Element
+        """
         with zipfile.ZipFile(self.filepath, "r") as z:
             with z.open("content.xml") as f:
                 return ET.parse(f).getroot()
 
     def read(self) -> List[Dict[str, str]]:
         """
-        Parse the ODS and return raw rows as dicts.
-        Each dict has keys: pen_brand, pen_name, pen_body_color, nib_size, ink_brand,
-        color_name, srgb_h, srgb_s, srgb_v, rgb_hex.
+        Parse the ODS spreadsheet into raw row dictionaries.
+
+        :returns: List of row dictionaries with keys:
+                  pen_brand, pen_name, pen_body_color, nib_size,
+                  ink_brand, color_name, srgb_h, srgb_s, srgb_v, rgb_hex
+        :rtype: list[dict[str,str]]
         """
         logger.debug(f"Reading ODS file: {self.filepath}")
         root = self._get_content_xml()
@@ -113,7 +170,12 @@ class DataReader:
 
     def create_pens(self, raw_rows: List[Dict[str, str]]) -> Dict[int, FountainPen]:
         """
-        Create FountainPen objects from raw data rows.
+        Instantiate FountainPen objects from raw row data.
+
+        :param raw_rows: Parsed raw row dictionaries.
+        :type raw_rows: list[dict[str,str]]
+        :returns: Mapping of pen_id to FountainPen instances.
+        :rtype: dict[int, FountainPen]
         """
         logger.debug(f"Creating pens from {len(raw_rows)} rows")
         pens: Dict[int, FountainPen] = {}
@@ -124,18 +186,24 @@ class DataReader:
             body_color = row.get("pen_body_color", "")
             raw = "|".join([brand, name, body_color]).encode("utf-8")
             pen_id = int.from_bytes(hashlib.sha256(raw).digest(), "big")
+            # Use positional args to avoid keyword-init mismatch
             pens[pen_id] = FountainPen(
-                id=pen_id,
-                brand=brand,
-                name=name,
-                nib_size=row.get("nib_size", ""),
-                body_color=body_color,
+                pen_id,
+                brand,
+                name,
+                row.get("nib_size", ""),
+                body_color,
             )
         return pens
 
     def create_inks(self, raw_rows: List[Dict[str, str]]) -> Dict[int, Ink]:
         """
-        Create Ink objects from raw data rows, keyed by SHA-256 id.
+        Instantiate Ink objects from raw row data.
+
+        :param raw_rows: Parsed raw row dictionaries.
+        :type raw_rows: list[dict[str,str]]
+        :returns: Mapping of ink_id to Ink instances.
+        :rtype: dict[int, Ink]
         """
         logger.debug(f"Creating inks from {len(raw_rows)} rows")
         inks: Dict[int, Ink] = {}
@@ -148,16 +216,13 @@ class DataReader:
             # Normalize hex code by stripping leading '#'
             raw_hex = row.get("rgb_hex", "") or ""
             hex_code = raw_hex.lstrip('#')
+            # Use positional args to avoid keyword-init mismatch
             inks[ink_id] = Ink(
-                id=ink_id,
-                brand=brand,
-                name=name,
-                color_srgb=[
-                    row.get("srgb_h", ""),
-                    row.get("srgb_s", ""),
-                    row.get("srgb_v", ""),
-                ],
-                color_rgb_hex=hex_code,
+                ink_id,
+                brand,
+                name,
+                [row.get("srgb_h", ""), row.get("srgb_s", ""), row.get("srgb_v", "")],
+                hex_code,
             )
         return inks
 
@@ -170,7 +235,16 @@ class DataReader:
         inks: Dict[int, Ink],
     ) -> Dict[int, PenSetup]:
         """
-        Create PenSetup objects keyed by SHA-256 id, mapping raw row pairs.
+        Instantiate PenSetup objects linking pens to inks.
+
+        :param raw_rows: Parsed raw row dictionaries.
+        :type raw_rows: list[dict[str,str]]
+        :param pens: Mapping of pen_id to FountainPen.
+        :type pens: dict[int, FountainPen]
+        :param inks: Mapping of ink_id to Ink.
+        :type inks: dict[int, Ink]
+        :returns: Mapping of setup_id to PenSetup instances.
+        :rtype: dict[int, PenSetup]
         """
         setups: Dict[int, PenSetup] = {}
         for row in raw_rows:
@@ -193,5 +267,6 @@ class DataReader:
             # compute setup_id
             s_raw = f"{pen_id}|{ink_id}".encode("utf-8")
             setup_id = int.from_bytes(hashlib.sha256(s_raw).digest(), "big")
-            setups[setup_id] = PenSetup(id=setup_id, pen_id=pen_id, ink_id=ink_id)
+            # Use positional args to avoid keyword-init mismatch
+            setups[setup_id] = PenSetup(setup_id, pen_id, ink_id)
         return setups

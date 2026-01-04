@@ -23,7 +23,22 @@ Run the CLI to generate an image::
 To use data from an ODS file::
 
   python main.py --use-data --data-file data/golden.ods
-  
+
+Demo
+----
+
+Example of a generated color wheel with legend:
+
+.. image:: ../../data/golden.png
+   :alt: Generated color wheel with legend
+   :width: 600px
+
+Interactive Converter UI example:
+
+.. image:: ../../data/ui.png
+   :alt: Textual-based interactive converter UI
+   :width: 600px
+
 Note: after updating `data/golden.ods`, run:
 
   make regenerate-golden

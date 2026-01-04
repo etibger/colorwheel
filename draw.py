@@ -1,5 +1,10 @@
 """
-Module for drawing the color wheel, markers, and legend.
+.. module:: draw
+   :noindex:
+   :synopsis: Draw color wheel, markers, and legend.
+
+This module provides functions to render a color wheel, annotate markers,
+and create a legend in the generated image.
 """
 
 import colorsys
@@ -28,7 +33,13 @@ HEX_COLORS: List[Tuple[str, str]] = [
 
 
 def draw_color_wheel(img: Image.Image) -> None:
-    """Draw the color wheel background on the image."""
+    """
+    Draw the color wheel background on the provided image.
+
+    :param img: PIL Image instance (mode 'RGB') to render the wheel onto.
+    :type img: PIL.Image.Image
+    :returns: None
+    """
     pixels = img.load()
     for y in range(WHEEL_SIZE):
         for x in range(WHEEL_SIZE):
@@ -48,7 +59,18 @@ def draw_markers(
     marker_colors: List[Tuple[str, str]],
     font_bold: ImageFont.ImageFont,
 ) -> List[Tuple[int, str, str, Tuple[int, int, int], int, int]]:
-    """Draw markers and number labels, return positions."""
+    """
+    Draw numbered markers on the color wheel and return their data.
+
+    :param draw: Pillow ImageDraw object used to draw shapes and text.
+    :type draw: PIL.ImageDraw.ImageDraw
+    :param marker_colors: List of (name, hex_color) tuples for each marker.
+    :type marker_colors: list[tuple[str, str]]
+    :param font_bold: PIL ImageFont for drawing bold labels.
+    :type font_bold: PIL.ImageFont.ImageFont
+    :returns: List of tuples (index, name, hex_color, rgb_tuple, x, y).
+    :rtype: list[tuple[int, str, str, tuple[int,int,int], int, int]]
+    """
     marker_positions: List[Tuple[int, str, str, Tuple[int, int, int], int, int]] = []
     for idx, (name, hex_color) in enumerate(marker_colors, start=1):
         rgb = hex_to_rgb(hex_color)
@@ -81,7 +103,19 @@ def draw_legend(
     font: ImageFont.ImageFont,
     font_bold: ImageFont.ImageFont,
 ) -> None:
-    """Draw the legend for the markers."""
+    """
+    Draw a legend panel showing marker swatches and labels.
+
+    :param draw: Pillow ImageDraw object used to draw shapes and text.
+    :type draw: PIL.ImageDraw.ImageDraw
+    :param marker_positions: List of marker data from draw_markers.
+    :type marker_positions: list[tuple[int, str, str, tuple[int,int,int], int, int]]
+    :param font: PIL ImageFont for regular text.
+    :type font: PIL.ImageFont.ImageFont
+    :param font_bold: PIL ImageFont for bold headings.
+    :type font_bold: PIL.ImageFont.ImageFont
+    :returns: None
+    """
     legend_x = WHEEL_SIZE + 20
     legend_y = 30
     line_height = 30
