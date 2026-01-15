@@ -33,10 +33,16 @@ from textual.widgets.option_list import Option
 
 import palette_generator as pg
 from color_palett_app import STRATEGIES, find_closest
+from color_utils import (
+    format_hex_with_name,
+    load_color_name_cache,
+    save_color_name_cache,
+)
 from data_reader import DataReader
 
 ODS_PATH = "data/golden.ods"
 LOG_FILE = "colorwheel_palett_ui.log"
+CACHE_FILE = "data/color_names.pickle"
 
 
 def verbosity_to_loglevel(verbosity: int) -> int:
@@ -88,6 +94,8 @@ def init_cli() -> logging.Logger:
 
 
 logger = init_cli()
+# Load cached color names at startup
+load_color_name_cache(CACHE_FILE)
 try:
     from textual.app import App, ComposeResult
 
@@ -176,6 +184,12 @@ class PaletteApp(App):
         if hasattr(self, "log_file") and self.log_file:
             self.log_file.close()
             logger.debug("Closed %s", LOG_FILE)
+        save_color_name_cache(CACHE_FILE)
+
+    def action_quit(self) -> None:
+        """Persist color name cache on quit."""
+        save_color_name_cache(CACHE_FILE)
+        super().action_quit()
 
     def log_event(self, message: str) -> None:
         """Write message to console and log file."""
@@ -229,7 +243,9 @@ class PaletteApp(App):
         label = self._label_for_hex(hex_color)
         self.query_one("#base_input", Input).value = hex_color
         suffix = f" ({label})" if label else ""
-        self.log_event(f"Selected base color from inks: {hex_color}{suffix}")
+        self.log_event(
+            f"Selected base color from inks: {format_hex_with_name(hex_color)}{suffix}"
+        )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         logger.debug("on_button_pressed: id=%s", event.button.id)
@@ -247,7 +263,9 @@ class PaletteApp(App):
             return
         hex_color, label = random.choice(self.available_colors)
         self.query_one("#base_input", Input).value = hex_color
-        self.log_event(f"Random base color: {label}")
+        self.log_event(
+            f"Random base color: {format_hex_with_name(hex_color)} ({label})"
+        )
 
     def handle_use_selected(self) -> None:
         """Use the currently highlighted ink from the list as base color."""
@@ -265,7 +283,9 @@ class PaletteApp(App):
         label = self._label_for_hex(hex_color)
         self.query_one("#base_input", Input).value = hex_color
         suffix = f" ({label})" if label else ""
-        self.log_event(f"Using highlighted ink: {hex_color}{suffix}")
+        self.log_event(
+            f"Using highlighted ink: {format_hex_with_name(hex_color)}{suffix}"
+        )
 
     def handle_run(self) -> None:
         """Generate the palette based on current selections."""
@@ -285,8 +305,8 @@ class PaletteApp(App):
             self.log_event("Select a palette strategy.")
             return
         self.log_event(
-            f"Generating palette with {strategy} using {base_color} "
-            f"(ODS source: {ODS_PATH})"
+            f"Generating palette with {strategy} using "
+            f"{format_hex_with_name(base_color)} (ODS source: {ODS_PATH})"
         )
         try:
             palette = self.generate_palette(base_color, strategy)
@@ -297,7 +317,10 @@ class PaletteApp(App):
         for color, closest in palette:
             label = self._label_for_hex(closest)
             suffix = f" ({label})" if label else ""
-            self.log_event(f"{color} -> closest available {closest}{suffix}")
+            self.log_event(
+                f"{format_hex_with_name(color)} -> "
+                f"closest available {format_hex_with_name(closest)}{suffix}"
+            )
 
 
 if __name__ == "__main__":

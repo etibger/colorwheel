@@ -14,6 +14,35 @@ and color spaces:
 
 import colorsys
 import math
+import os
+import pickle
+
+from color_name_api import get_color_name_from_api
+
+# Minimal curated set of color names, used for readable labels.
+# Includes common CSS names plus selected custom entries (e.g., "Candy Green").
+CSS_COLOR_NAMES: dict[str, str] = {
+    "#ff0000": "Red",
+    "#00ff00": "Lime",
+    "#0000ff": "Blue",
+    "#ffff00": "Yellow",
+    "#00ffff": "Aqua",
+    "#ff00ff": "Magenta",
+    "#ffffff": "White",
+    "#000000": "Black",
+    "#808080": "Gray",
+    "#800000": "Maroon",
+    "#808000": "Olive",
+    "#008000": "Green",
+    "#800080": "Purple",
+    "#008080": "Teal",
+    "#000080": "Navy",
+    "#ffa500": "Orange",
+    "#ffc0cb": "Pink",
+    "#a52a2a": "Brown",
+    "#37ce00": "Candy Green",  # matches naming seen on ZSA configurator
+}
+COLOR_NAME_CACHE: dict[str, str] = {}
 
 
 def hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
@@ -181,3 +210,98 @@ def oklab_to_rgb(oklab: tuple[float, float, float]) -> tuple[float, float, float
         return 12.92 * c if c <= 0.0031308 else 1.055 * (c ** (1 / 2.4)) - 0.055
 
     return (to_srgb(r), to_srgb(g), to_srgb(b))
+
+
+def hex_to_color_name(hex_color: str) -> str:
+    """
+    Map a hex color to a human-readable name.
+
+    The lookup prefers the Color.pizza API for accurate names. If the API
+    raises an error, a curated local palette is used as a fallback.
+
+    Exact matches return the canonical name from ``CSS_COLOR_NAMES``. If no exact
+    match exists, the closest named color by Euclidean RGB distance is returned.
+
+    :param hex_color: Hex code in ``#RRGGBB`` format.
+    :type hex_color: str
+    :returns: Human-readable color name (best effort).
+    :rtype: str
+    """
+    normalized = rgb_to_hex(hex_to_rgbf(hex_color)).lower()
+    if normalized in COLOR_NAME_CACHE:
+        return COLOR_NAME_CACHE[normalized]
+    try:
+        name = get_color_name_from_api(normalized)
+        COLOR_NAME_CACHE[normalized] = name
+        return name
+    except Exception:
+        pass
+    if normalized in CSS_COLOR_NAMES:
+        COLOR_NAME_CACHE[normalized] = CSS_COLOR_NAMES[normalized]
+        return CSS_COLOR_NAMES[normalized]
+    target = hex_to_rgbf(normalized)
+
+    def dist(rgb_a, rgb_b):
+        return math.sqrt(sum((a - b) ** 2 for a, b in zip(rgb_a, rgb_b)))
+
+    best_name = "Unnamed color"
+    best_dist = float("inf")
+    for hex_key, name in CSS_COLOR_NAMES.items():
+        candidate = hex_to_rgbf(hex_key)
+        d = dist(target, candidate)
+        if d < best_dist:
+            best_dist = d
+            best_name = name
+    return best_name
+
+
+def format_hex_with_name(hex_color: str) -> str:
+    """
+    Format a hex color with its human-readable name.
+
+    :param hex_color: Hex code in ``#RRGGBB`` format.
+    :type hex_color: str
+    :returns: String in the form ``#rrggbb (Color Name)``.
+    :rtype: str
+    """
+    normalized = rgb_to_hex(hex_to_rgbf(hex_color))
+    name = hex_to_color_name(normalized)
+    return f"{normalized} ({name})"
+
+
+def load_color_name_cache(path: str) -> bool:
+    """
+    Load cached color names from a pickle file into ``COLOR_NAME_CACHE``.
+
+    :param path: Path to a pickle file containing a dict of hex->name.
+    :type path: str
+    :returns: True if cache loaded, False otherwise.
+    :rtype: bool
+    """
+    if not os.path.exists(path):
+        return False
+    try:
+        with open(path, "rb") as f:
+            data = pickle.load(f)
+        if isinstance(data, dict):
+            COLOR_NAME_CACHE.update({k.lower(): v for k, v in data.items()})
+            return True
+    except Exception:
+        return False
+    return False
+
+
+def save_color_name_cache(path: str) -> None:
+    """
+    Persist the current ``COLOR_NAME_CACHE`` to a pickle file.
+
+    :param path: Destination path for the pickle file.
+    :type path: str
+    """
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "wb") as f:
+            pickle.dump(COLOR_NAME_CACHE, f)
+    except Exception:
+        # Ignore persistence failures to avoid crashing the UI/CLI.
+        return

@@ -44,6 +44,44 @@ and color spaces:</p>
 <li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Color_space#Oklab">Oklab</a>: Perceptual color space.</p></li>
 </ul>
 <dl class="py function">
+<dt class="sig sig-object py" id="color_utils.format_hex_with_name">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">format_hex_with_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#color_utils.format_hex_with_name" title="Link to this definition">¶</a></dt>
+<dd><p>Format a hex color with its human-readable name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_color</strong> (<em>str</em>) – Hex code in <code class="docutils literal notranslate"><span class="pre">#RRGGBB</span></code> format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String in the form <code class="docutils literal notranslate"><span class="pre">#rrggbb</span> <span class="pre">(Color</span> <span class="pre">Name)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.hex_to_color_name">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">hex_to_color_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#color_utils.hex_to_color_name" title="Link to this definition">¶</a></dt>
+<dd><p>Map a hex color to a human-readable name.</p>
+<p>The lookup prefers the Color.pizza API for accurate names. If the API
+raises an error, a curated local palette is used as a fallback.</p>
+<p>Exact matches return the canonical name from <code class="docutils literal notranslate"><span class="pre">CSS_COLOR_NAMES</span></code>. If no exact
+match exists, the closest named color by Euclidean RGB distance is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_color</strong> (<em>str</em>) – Hex code in <code class="docutils literal notranslate"><span class="pre">#RRGGBB</span></code> format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Human-readable color name (best effort).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="color_utils.hex_to_rgb">
 <span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">hex_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#color_utils.hex_to_rgb" title="Link to this definition">¶</a></dt>
 <dd><p>Convert a hexadecimal color code to an integer RGB tuple in sRGB space.</p>
@@ -114,6 +152,23 @@ saturation and lightness in [0..1].</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.load_color_name_cache">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">load_color_name_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#color_utils.load_color_name_cache" title="Link to this definition">¶</a></dt>
+<dd><p>Load cached color names from a pickle file into <code class="docutils literal notranslate"><span class="pre">COLOR_NAME_CACHE</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to a pickle file containing a dict of hex-&gt;name.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if cache loaded, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -200,6 +255,17 @@ saturation and lightness in [0..1].</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_utils.save_color_name_cache">
+<span class="sig-prename descclassname"><span class="pre">color_utils.</span></span><span class="sig-name descname"><span class="pre">save_color_name_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#color_utils.save_color_name_cache" title="Link to this definition">¶</a></dt>
+<dd><p>Persist the current <code class="docutils literal notranslate"><span class="pre">COLOR_NAME_CACHE</span></code> to a pickle file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Destination path for the pickle file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -805,15 +871,19 @@ db_url: Database URL (e.g., ‘sqlite:///pens.db’).</p>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ui.html">User Interfaces</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Module Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.format_hex_with_name"><code class="docutils literal notranslate"><span class="pre">format_hex_with_name()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.hex_to_color_name"><code class="docutils literal notranslate"><span class="pre">hex_to_color_name()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.hex_to_rgb"><code class="docutils literal notranslate"><span class="pre">hex_to_rgb()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.hex_to_rgbf"><code class="docutils literal notranslate"><span class="pre">hex_to_rgbf()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.hsl_to_rgb"><code class="docutils literal notranslate"><span class="pre">hsl_to_rgb()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.hsv_to_xy"><code class="docutils literal notranslate"><span class="pre">hsv_to_xy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.load_color_name_cache"><code class="docutils literal notranslate"><span class="pre">load_color_name_cache()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.oklab_to_rgb"><code class="docutils literal notranslate"><span class="pre">oklab_to_rgb()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hex"><code class="docutils literal notranslate"><span class="pre">rgb_to_hex()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hsl"><code class="docutils literal notranslate"><span class="pre">rgb_to_hsl()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hsv"><code class="docutils literal notranslate"><span class="pre">rgb_to_hsv()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_oklab"><code class="docutils literal notranslate"><span class="pre">rgb_to_oklab()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#color_utils.save_color_name_cache"><code class="docutils literal notranslate"><span class="pre">save_color_name_cache()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data_reader.DataReader"><code class="docutils literal notranslate"><span class="pre">DataReader</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data_reader.FountainPen"><code class="docutils literal notranslate"><span class="pre">FountainPen</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data_reader.Ink"><code class="docutils literal notranslate"><span class="pre">Ink</span></code></a></li>

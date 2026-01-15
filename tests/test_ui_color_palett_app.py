@@ -19,6 +19,12 @@ from textual.widgets import Input, OptionList
 from ui_color_palett_app import LOG_FILE, PaletteApp, init_cli
 
 LOG_PATH = Path(LOG_FILE)
+NAME_FMT = "Name({})"
+
+
+def fmt_hex(hex_color: str) -> str:
+    normalized = hex_color.lower()
+    return f"{normalized} ({NAME_FMT.format(normalized)})"
 
 
 @pytest.fixture(autouse=True)
@@ -27,6 +33,14 @@ def clean_palette_log():
     LOG_PATH.unlink(missing_ok=True)
     yield
     LOG_PATH.unlink(missing_ok=True)
+
+
+@pytest.fixture(autouse=True)
+def mock_color_names(monkeypatch):
+    """Avoid external API calls; provide deterministic names."""
+    monkeypatch.setattr(
+        "color_utils.hex_to_color_name", lambda hx: NAME_FMT.format(hx.lower())
+    )
 
 
 @pytest.mark.parametrize(
@@ -63,10 +77,10 @@ def test_palette_ui_generates_expected_palette():
     """Set a base color, run tetradic strategy, and verify logged palette."""
     base_color = "#ff0000"
     expected_palette_lines = [
-        "#ff0000 -> closest available #eb4836 (Pilot - fuyu-gaki)",
-        "#ffff00 -> closest available #da8730 (Kaweco - Sunrise Orange)",
-        "#00ffff -> closest available #00c49f (Faber-Castell - Türkis Turquoise)",
-        "#0000ff -> closest available #4c58e0 (Kaweco - Royal Blue)",
+        f"{fmt_hex('#ff0000')} -> closest available {fmt_hex('#eb4836')} (Pilot - fuyu-gaki)",
+        f"{fmt_hex('#ffff00')} -> closest available {fmt_hex('#da8730')} (Kaweco - Sunrise Orange)",
+        f"{fmt_hex('#00ffff')} -> closest available {fmt_hex('#00c49f')} (Faber-Castell - Türkis Turquoise)",
+        f"{fmt_hex('#0000ff')} -> closest available {fmt_hex('#4c58e0')} (Kaweco - Royal Blue)",
     ]
 
     async def run_app():
@@ -80,7 +94,7 @@ def test_palette_ui_generates_expected_palette():
     asyncio.run(run_app())
     log_lines = LOG_PATH.read_text(encoding="utf-8").splitlines()
     assert (
-        f"Generating palette with tetradic using {base_color} "
+        f"Generating palette with tetradic using {fmt_hex(base_color)} "
         "(ODS source: data/golden.ods)" in log_lines
     )
     palette_lines = [line for line in log_lines if "-> closest available" in line]
@@ -131,8 +145,7 @@ def test_palette_ui_strategy_matrix(strategy, base_color, expected_closest):
     palette_lines = [line for line in log_lines if "-> closest available" in line]
     assert len(palette_lines) == 4, f"{strategy} did not log 4 palette entries"
     closests = [
-        line.split(" -> closest available ")[1].split(" (", 1)[0]
-        for line in palette_lines
+        line.split(" -> closest available ")[1].split()[0] for line in palette_lines
     ]
     assert closests == expected_closest
 
@@ -156,7 +169,8 @@ def test_palette_ui_use_selected_highlight_flow():
     log_lines = LOG_PATH.read_text(encoding="utf-8").splitlines()
     assert base_value == expected_hex
     assert any(
-        line.startswith(f"Using highlighted ink: {expected_hex}") for line in log_lines
+        line.startswith(f"Using highlighted ink: {fmt_hex(expected_hex)}")
+        for line in log_lines
     ), "Highlighted ink usage was not logged"
 
 
@@ -179,7 +193,7 @@ def test_palette_ui_option_selected_event():
     log_lines = LOG_PATH.read_text(encoding="utf-8").splitlines()
     assert base_val == expected_hex
     assert any(
-        line.startswith(f"Selected base color from inks: {expected_hex}")
+        line.startswith(f"Selected base color from inks: {fmt_hex(expected_hex)}")
         for line in log_lines
     ), "Option selection was not logged"
 
@@ -202,7 +216,8 @@ def test_palette_ui_random_base(monkeypatch):
     log_lines = LOG_PATH.read_text(encoding="utf-8").splitlines()
     assert base_val == expected_hex
     assert any(
-        line == f"Random base color: {expected_label}" for line in log_lines
+        line == f"Random base color: {fmt_hex(expected_hex)} ({expected_label})"
+        for line in log_lines
     ), "Random base selection not logged with label"
 
 

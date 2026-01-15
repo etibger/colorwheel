@@ -29,7 +29,7 @@ import logging
 import math
 
 import palette_generator as pg
-from color_utils import hex_to_rgbf
+from color_utils import format_hex_with_name, hex_to_rgbf
 from data_reader import DataReader
 
 
@@ -134,7 +134,10 @@ def main() -> None:
     print("Generated palette:")
     for color in palette:
         closest = find_closest(color, available)
-        print(f"  {color}  -> closest available {closest}")
+        print(
+            f"  {format_hex_with_name(color)}  -> "
+            f"closest available {format_hex_with_name(closest)}"
+        )
 
 
 if __name__ == "__main__":
