@@ -34,12 +34,12 @@ class FountainPen:
     :param body_color: Hex color code of the pen body.
     :type body_color: str
     """
+
     id: int
     brand: str
     name: str
     nib_size: str
     body_color: str
-
 
 
 @dataclass
@@ -58,12 +58,12 @@ class Ink:
     :param color_rgb_hex: Hex color code of the ink.
     :type color_rgb_hex: str
     """
+
     id: int
     brand: str
     name: str
     color_srgb: List[str]
     color_rgb_hex: str
-
 
 
 @dataclass
@@ -78,10 +78,10 @@ class PenSetup:
     :param ink_id: Identifier of the associated Ink.
     :type ink_id: int
     """
+
     id: int
     pen_id: int
     ink_id: int
-
 
 
 class DataReader:
@@ -215,7 +215,7 @@ class DataReader:
             ink_id = int.from_bytes(hashlib.sha256(raw).digest(), "big")
             # Normalize hex code by stripping leading '#'
             raw_hex = row.get("rgb_hex", "") or ""
-            hex_code = raw_hex.lstrip('#')
+            hex_code = raw_hex.lstrip("#")
             # Use positional args to avoid keyword-init mismatch
             inks[ink_id] = Ink(
                 ink_id,

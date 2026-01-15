@@ -30,6 +30,7 @@ import math
 
 import palette_generator as pg
 from color_utils import format_hex_with_name, hex_to_rgbf
+from config_loader import load_config
 from data_reader import DataReader
 
 
@@ -66,6 +67,7 @@ STRATEGIES = [
 
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for the palette app."""
+    config = load_config()
     parser = argparse.ArgumentParser(
         description="Generate a 4-color palette from a base color and strategy."
     )
@@ -81,8 +83,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--ods-file",
-        default="data/golden.ods",
-        help="Path to ODS file for available colors (default: data/golden.ods)",
+        default=config["ods_path"],
+        help=(
+            "Path to ODS file for available colors "
+            f"(default: {config['ods_path']})"
+        ),
     )
     parser.add_argument(
         "-v",

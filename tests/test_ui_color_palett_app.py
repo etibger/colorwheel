@@ -43,6 +43,15 @@ def mock_color_names(monkeypatch):
     )
 
 
+@pytest.fixture(autouse=True)
+def sandbox_color_cache(monkeypatch, tmp_path):
+    """Prevent tests from reading/writing the real color name cache file."""
+    temp_cache = tmp_path / "color_names.pickle"
+    monkeypatch.setattr("ui_color_palett_app.CACHE_FILE", str(temp_cache))
+    monkeypatch.setattr("ui_color_palett_app.save_color_name_cache", lambda path: None)
+    monkeypatch.setattr("ui_color_palett_app.load_color_name_cache", lambda path: False)
+
+
 @pytest.mark.parametrize(
     "argv, expected_level",
     [

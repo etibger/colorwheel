@@ -14,14 +14,16 @@ from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont
 
 from color_utils import hex_to_rgb, hsv_to_xy, rgb_to_hsv
+from config_loader import load_config
 
-# Configuration constants
-WHEEL_SIZE: int = 600
-LEGEND_WIDTH: int = 260
+CONFIG = load_config()
+# Configuration constants loaded from config
+WHEEL_SIZE: int = int(CONFIG["wheel_size"])
+LEGEND_WIDTH: int = int(CONFIG["legend_width"])
 IMAGE_SIZE: Tuple[int, int] = (WHEEL_SIZE + LEGEND_WIDTH, WHEEL_SIZE)
 RADIUS: int = WHEEL_SIZE // 2
 CENTER: Tuple[int, int] = (RADIUS, RADIUS)
-MARKER_RADIUS: int = 6
+MARKER_RADIUS: int = int(CONFIG["marker_radius"])
 HEX_COLORS: List[Tuple[str, str]] = [
     ("Red", "#FF0000"),
     ("Green", "#00FF00"),

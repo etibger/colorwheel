@@ -38,11 +38,13 @@ from color_utils import (
     load_color_name_cache,
     save_color_name_cache,
 )
+from config_loader import load_config
 from data_reader import DataReader
 
-ODS_PATH = "data/golden.ods"
-LOG_FILE = "colorwheel_palett_ui.log"
-CACHE_FILE = "data/color_names.pickle"
+CONFIG = load_config()
+ODS_PATH = CONFIG["ods_path"]
+LOG_FILE = CONFIG["palette_log_file"]
+CACHE_FILE = CONFIG["color_name_cache"]
 
 
 def verbosity_to_loglevel(verbosity: int) -> int:

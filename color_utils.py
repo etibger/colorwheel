@@ -40,7 +40,6 @@ CSS_COLOR_NAMES: dict[str, str] = {
     "#ffa500": "Orange",
     "#ffc0cb": "Pink",
     "#a52a2a": "Brown",
-    "#37ce00": "Candy Green",  # matches naming seen on ZSA configurator
 }
 COLOR_NAME_CACHE: dict[str, str] = {}
 

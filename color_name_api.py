@@ -10,7 +10,10 @@ import json
 import urllib.parse
 import urllib.request
 
-API_URL = "https://api.color.pizza/v1/"
+from config_loader import load_config
+
+CONFIG = load_config()
+API_URL = CONFIG["color_api_url"]
 
 
 def get_color_name_from_api(hex_color: str) -> str:
