@@ -18,6 +18,7 @@ _DEFAULTS: Dict[str, Any] = {
     "palette_log_file": "colorwheel_palett_ui.log",
     "color_name_cache": "data/color_names.pickle",
     "color_api_url": "https://api.color.pizza/v1/",
+    "palette_preview_file": "generated_palette_color_wheel.png",
     "wheel_size": 600,
     "legend_width": 260,
     "marker_radius": 6,

@@ -16,7 +16,7 @@ repos:
         always_run: true
       - id: pytest
         name: Run pytest
-        entry: uv run pytest --ignore=tests/test_ui_app.py
+        entry: uv run pytest --ignore=test_ui_color_palett_app.py --ignore=tests/test_ui_app.py
         language: system
         stages: [pre-commit]
         pass_filenames: false

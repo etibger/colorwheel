@@ -50,6 +50,10 @@ def sandbox_color_cache(monkeypatch, tmp_path):
     monkeypatch.setattr("ui_color_palett_app.CACHE_FILE", str(temp_cache))
     monkeypatch.setattr("ui_color_palett_app.save_color_name_cache", lambda path: None)
     monkeypatch.setattr("ui_color_palett_app.load_color_name_cache", lambda path: False)
+    monkeypatch.setattr(
+        "ui_color_palett_app.PREVIEW_FILE",
+        str(tmp_path / "generated_palette_color_wheel.png"),
+    )
 
 
 @pytest.mark.parametrize(
@@ -57,6 +61,7 @@ def sandbox_color_cache(monkeypatch, tmp_path):
     [
         (["ui_color_palett_app.py", "-v"], logging.WARNING),
         (["ui_color_palett_app.py", "-vv"], logging.INFO),
+        (["ui_color_palett_app.py", "-vvv"], logging.DEBUG),
     ],
 )
 def test_palette_init_cli_verbosity(monkeypatch, argv, expected_level):
@@ -65,7 +70,12 @@ def test_palette_init_cli_verbosity(monkeypatch, argv, expected_level):
     monkeypatch.setattr(sys, "argv", argv)
     logger = init_cli()
     try:
-        assert logger.level == expected_level
+        # File handler should reflect requested level; logger stays at DEBUG
+        file_levels = [
+            h.level for h in logger.handlers if isinstance(h, logging.FileHandler)
+        ]
+        assert expected_level in file_levels
+        assert logger.level == logging.DEBUG
     finally:
         logger.handlers.clear()
 
@@ -86,10 +96,18 @@ def test_palette_ui_generates_expected_palette():
     """Set a base color, run tetradic strategy, and verify logged palette."""
     base_color = "#ff0000"
     expected_palette_lines = [
-        f"{fmt_hex('#ff0000')} -> closest available {fmt_hex('#eb4836')} (Pilot - fuyu-gaki)",
-        f"{fmt_hex('#ffff00')} -> closest available {fmt_hex('#da8730')} (Kaweco - Sunrise Orange)",
-        f"{fmt_hex('#00ffff')} -> closest available {fmt_hex('#00c49f')} (Faber-Castell - Türkis Turquoise)",
-        f"{fmt_hex('#0000ff')} -> closest available {fmt_hex('#4c58e0')} (Kaweco - Royal Blue)",
+        f"{fmt_hex('#ff0000')} -> closest available {
+            fmt_hex('#eb4836')
+        } (Pilot - fuyu-gaki)",
+        f"{fmt_hex('#ffff00')} -> closest available {
+            fmt_hex('#da8730')
+        } (Kaweco - Sunrise Orange)",
+        f"{fmt_hex('#00ffff')} -> closest available {
+            fmt_hex('#00c49f')
+        } (Faber-Castell - Türkis Turquoise)",
+        f"{fmt_hex('#0000ff')} -> closest available {
+            fmt_hex('#4c58e0')
+        } (Kaweco - Royal Blue)",
     ]
 
     async def run_app():
@@ -108,6 +126,24 @@ def test_palette_ui_generates_expected_palette():
     )
     palette_lines = [line for line in log_lines if "-> closest available" in line]
     assert palette_lines == expected_palette_lines
+
+
+def test_palette_ui_log_event_visible():
+    """Ensure log_event writes to the on-screen Log widget."""
+
+    async def run_case():
+        async with PaletteApp().run_test(size=TEST_SIZE) as pilot:
+            await pilot.pause(0.2)
+            pilot.app.log_event("hello-log")
+            await pilot.pause(0.1)
+            lines = pilot.app.log_widget.lines
+        return lines
+
+    lines = asyncio.run(run_case())
+    assert any(
+        ("hello-log" in line.plain) if hasattr(line, "plain") else ("hello-log" in str(line))
+        for line in lines
+    )
 
 
 @pytest.mark.parametrize(
@@ -228,6 +264,43 @@ def test_palette_ui_random_base(monkeypatch):
         line == f"Random base color: {fmt_hex(expected_hex)} ({expected_label})"
         for line in log_lines
     ), "Random base selection not logged with label"
+
+
+def test_palette_ui_generates_preview_file(monkeypatch, tmp_path):
+    """Palette generation should render a preview PNG via draw helpers."""
+    preview_path = tmp_path / "preview.png"
+    monkeypatch.setattr("ui_color_palett_app.PREVIEW_FILE", str(preview_path))
+
+    async def run_case():
+        async with PaletteApp().run_test(size=TEST_SIZE) as pilot:
+            await pilot.pause(0.3)
+            pilot.app.query_one("#base_input", Input).value = "#ff0000"
+            await pilot.click("#strategy_tetradic")
+            await pilot.click("#run")
+            await pilot.pause(0.3)
+
+    asyncio.run(run_case())
+    assert preview_path.exists(), "Preview PNG was not created"
+
+
+def test_palette_ui_update_preview_hint():
+    """_update_preview_hint should change the preview Static text."""
+
+    async def run_case():
+        async with PaletteApp().run_test(size=TEST_SIZE) as pilot:
+            await pilot.pause(0.2)
+            pilot.app._update_preview_hint("Updated preview text")
+            await pilot.pause(0.1)
+            preview = pilot.app.query_one("#palette_preview")
+            rendered = preview._render()
+            if isinstance(rendered, str):
+                content = rendered
+            else:
+                content = "".join(str(r) for r in rendered)
+        return content
+
+    content = asyncio.run(run_case())
+    assert "Updated preview text" in str(content)
 
 
 TEST_SIZE = (120, 80)
