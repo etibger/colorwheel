@@ -18,6 +18,7 @@ data/output.json
 colorwheel_textual.log
 colorwheel_debug.log
 colorwheel_ui.log
+colorwheel_palett_ui.log
 **tmp*
 data/golden.sqlite
 

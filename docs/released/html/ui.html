@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>User Interfaces &#8212; colorwheel  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Module Reference" href="modules.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="user-interfaces">
+<h1>User Interfaces<a class="headerlink" href="#user-interfaces" title="Link to this heading">¶</a></h1>
+<p>Two Textual-based interfaces ship with the project:</p>
+<section id="converter-ui">
+<h2>Converter UI<a class="headerlink" href="#converter-ui" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ui.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">ConverterApp</span></code> for format conversions (ODS, SQL DB, JSON, PNG).</p>
+<ul class="simple">
+<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui.py</span></code>.</p></li>
+<li><p>Choose input/output formats via radio buttons.</p></li>
+<li><p>Provide file paths in the input/output fields and click <strong>Run</strong>.</p></li>
+<li><p>Progress and errors are logged to <code class="docutils literal notranslate"><span class="pre">colorwheel_textual.log</span></code>.</p></li>
+</ul>
+</section>
+<section id="palette-ui">
+<h2>Palette UI<a class="headerlink" href="#palette-ui" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ui_color_palett_app.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">PaletteApp</span></code> for palette exploration.</p>
+<ul class="simple">
+<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui_color_palett_app.py</span></code>.</p></li>
+<li><p>Pick a base color manually or highlight an ink from the loaded ODS palette.</p></li>
+<li><p>Select a palette strategy (tetradic, square scheme, temperature-driven, value-driven, or OKLCH).</p></li>
+<li><p>Click <strong>Generate palette</strong> to see the computed colors and their closest available inks, including brand/name metadata.</p></li>
+<li><p>Logs are written to <code class="docutils literal notranslate"><span class="pre">colorwheel_palett_ui.log</span></code> and surfaced in the on-screen log widget.</p></li>
+</ul>
+</section>
+<section id="testing-uis">
+<h2>Testing UIs<a class="headerlink" href="#testing-uis" title="Link to this heading">¶</a></h2>
+<p>Both UIs support Textual’s <code class="docutils literal notranslate"><span class="pre">run_test</span></code> helper for headless testing. See
+<code class="docutils literal notranslate"><span class="pre">tests/test_ui_app.py</span></code> and <code class="docutils literal notranslate"><span class="pre">tests/test_ui_color_palett_app.py</span></code> for examples
+that drive the widgets, click buttons, and assert on generated files or log output.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">colorwheel</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#converter-ui">Converter UI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#palette-ui">Palette UI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-uis">Testing UIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Module Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="overview.html" title="previous chapter">Overview</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">Module Reference</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Tibor Gerlai.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/ui.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

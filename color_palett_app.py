@@ -3,23 +3,35 @@
    :noindex:
    :synopsis: Command-line tool to generate 4-color palettes from a base color and strategy.
 
-Available palette strategies:
-- tetradic: double complementary hues at 0°,60°,180°,240°
-- square_scheme: four hues at 90° intervals
-- split_complementary_accent: two splits ±30° and complement accent
-- two_warm_two_cool: pick 2 warm and 2 cool colors
-- dominant_temperature_contrast: 2 from dominant and 2 from opposite temperature
-- value_ladder_accent: three evenly spaced lightness + high-saturation accent
-    - oklch_sampling: sample four hues at equal 90° steps in OKLCH space
+Overview
+--------
+This module powers the palette CLI. It exposes:
+
+* Strategy dispatching against :mod:`palette_generator`
+* Utility helpers for logging and color distance calculations
+* A simple ``main`` entry point used by the CLI
+
+Palette Strategies
+------------------
+The following strategies are available:
+
+* ``tetradic``: double complementary hues at 0°, 60°, 180°, 240°
+* ``square_scheme``: four hues at 90° intervals
+* ``split_complementary_accent``: two splits ±30° and a complementary accent
+* ``two_warm_two_cool``: pick two warm and two cool colors
+* ``dominant_temperature_contrast``: two from the dominant temperature and two from the opposite
+* ``value_ladder_accent``: three evenly spaced lightness values plus a high-saturation accent
+* ``oklch_sampling``: sample four hues at equal 90° steps in OKLCH space
 """
 
 import argparse
+import logging
 import math
 
 import palette_generator as pg
 from color_utils import hex_to_rgbf
 from data_reader import DataReader
-import logging
+
 
 def setup_logging(verbose: int) -> logging.Logger:
     """
@@ -31,14 +43,15 @@ def setup_logging(verbose: int) -> logging.Logger:
     :rtype: logging.Logger
     """
     level = logging.DEBUG if verbose and verbose > 0 else logging.INFO
-    logger = logging.getLogger('color_palett_app')
+    logger = logging.getLogger("color_palett_app")
     logger.setLevel(level)
     if not logger.handlers:
         ch = logging.StreamHandler()
         ch.setLevel(level)
-        ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+        ch.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
         logger.addHandler(ch)
     return logger
+
 
 STRATEGIES = [
     "tetradic",

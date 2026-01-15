@@ -22,4 +22,5 @@ Use the table of contents below to navigate.
    :caption: Contents:
 
    overview
+   ui
    modules

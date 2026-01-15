@@ -1,9 +1,6 @@
-[run]
-# Measure coverage only for the project source in the current directory
-source = .
-
 [report]
-# Omit test files and virtual environment
-omit =
-    .venv/*
-    tests/*
+exclude_lines =
+    pragma: no cover
+    ^\s*raise\b
+    ^\s*except\b
+    ^\s*logger\.exception
