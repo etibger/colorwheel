@@ -4,7 +4,7 @@ Tests for color_utils.hex_to_color_name, covering API and fallback paths.
 
 import json
 
-from color_utils import hex_to_color_name
+from utils.color_utils import hex_to_color_name
 
 
 class DummyResponse:
@@ -27,14 +27,14 @@ def test_hex_to_color_name_api(monkeypatch):
     def fake_urlopen(_req):
         return DummyResponse(payload)
 
-    monkeypatch.setattr("color_name_api.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("apis.color_name_api.urllib.request.urlopen", fake_urlopen)
     assert hex_to_color_name("#37ce00") == "Candy Green"
 
 
 def test_hex_to_color_name_fallback(monkeypatch):
     # Simulate API failure to trigger local fallback search
     monkeypatch.setattr(
-        "color_name_api.urllib.request.urlopen",
+        "apis.color_name_api.urllib.request.urlopen",
         lambda _req: (_ for _ in ()).throw(RuntimeError("net down")),
     )
     assert hex_to_color_name("#36c000") in {"Candy Green", "Lime", "Green"}

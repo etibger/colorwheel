@@ -11,7 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
-from data_reader import DataReader
+from storage.data_reader import DataReader
 
 Base = declarative_base()
 

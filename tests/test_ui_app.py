@@ -18,7 +18,7 @@ import filecmp  # File comparison utility to validate generated outputs
 import pytest  # Pytest framework for writing and running tests
 from textual.widgets import Input  # Textual widget for simulating user text input
 
-from ui_data_fmt_conv import (
+from ui.ui_data_fmt_conv import (
     ConverterApp,  # Main application class under test (Textual-based GUI)
 )
 

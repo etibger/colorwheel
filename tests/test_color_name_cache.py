@@ -4,7 +4,7 @@ Tests for color name memoization, persistence, and API fallbacks.
 
 import pickle
 
-from color_utils import (
+from utils.color_utils import (
     COLOR_NAME_CACHE,
     hex_to_color_name,
     load_color_name_cache,
@@ -29,7 +29,7 @@ def test_hex_to_color_name_memoization(monkeypatch, tmp_path):
         calls.append(hex_code)
         return "API Name"
 
-    monkeypatch.setattr("color_utils.get_color_name_from_api", fake_api)
+    monkeypatch.setattr("utils.color_utils.get_color_name_from_api", fake_api)
     COLOR_NAME_CACHE.clear()
     assert hex_to_color_name("#abcdef") == "API Name"
     assert hex_to_color_name("#abcdef") == "API Name"

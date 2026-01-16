@@ -1,5 +1,5 @@
 """
-Unit tests for main.py CLI and functionality.
+Unit tests for apps/main.py CLI and functionality.
 """
 
 import json
@@ -9,7 +9,7 @@ import sys
 
 import pytest
 
-import main
+import apps.main as main
 
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def test_parse_args_defaults(monkeypatch):
     # Ensure default args are set when no flags provided
     monkeypatch.setenv("PYTEST_DISABLE_PLUGIN_AUTOLOAD", "1")
     # Override sys.argv for parse_args
-    monkeypatch.setattr(sys, "argv", ["main.py"])
+    monkeypatch.setattr(sys, "argv", ["apps/main.py"])
     args = main.parse_args()
     # Default output file and flags
     assert args.output == main.OUTPUT_FILE
@@ -55,7 +55,7 @@ def test_setup_logging_levels(tmp_path):
 def test_export_json_from_ods_cli(tmp_path, sample_ods, monkeypatch):
     # Test CLI export to JSON from ODS
     out_json = tmp_path / "export.json"
-    args = ["main.py", "--export-json", str(out_json), "--data-file", sample_ods]
+    args = ["apps/main.py", "--export-json", str(out_json), "--data-file", sample_ods]
     monkeypatch.setattr(sys, "argv", args)
     main.main()
     assert out_json.exists(), "JSON not created by CLI export"
@@ -68,7 +68,9 @@ def test_load_db_cli(tmp_path, sample_ods, monkeypatch):
     # Test CLI load data from ODS to DB
     out_db = tmp_path / "out.db"
     monkeypatch.setattr(
-        sys, "argv", ["main.py", "--db-url", str(out_db), "--data-file", sample_ods]
+        sys,
+        "argv",
+        ["apps/main.py", "--db-url", str(out_db), "--data-file", sample_ods],
     )
     main.main()
     conn = sqlite3.connect(str(out_db))
@@ -85,7 +87,7 @@ def test_default_generate_image(tmp_path, sample_ods, monkeypatch):
     tmp_png = tmp_path / main.OUTPUT_FILE
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(
-        sys, "argv", ["main.py", "--use-data", "--data-file", sample_ods]
+        sys, "argv", ["apps/main.py", "--use-data", "--data-file", sample_ods]
     )
     main.main()
     assert tmp_png.exists(), "Default PNG not generated"
@@ -105,10 +107,10 @@ def test_load_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
     import sys
 
     monkeypatch.setattr(
-        sys, "argv", ["main.py", "--db-url", db_url, "--data-file", sample_ods]
+        sys, "argv", ["apps/main.py", "--db-url", db_url, "--data-file", sample_ods]
     )
     # Running with URL should create the same out_db file
-    import main
+    import apps.main as main
 
     main.main()
     # Check file exists
@@ -126,7 +128,7 @@ def test_load_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
 def test_export_json_from_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
     """Test CLI --export-json uses full SQLite URL to export DB to JSON."""
     # First create a DB from ODS
-    from orm import load_data_from_ods
+    from storage.orm import load_data_from_ods
 
     db_path = tmp_path / "db_for_json.db"
     engine = load_data_from_ods(sample_ods, str(db_path))
@@ -138,9 +140,11 @@ def test_export_json_from_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
     import sys
 
     monkeypatch.setattr(
-        sys, "argv", ["main.py", "--export-json", str(out_json), "--db-url", db_url]
+        sys,
+        "argv",
+        ["apps/main.py", "--export-json", str(out_json), "--db-url", db_url],
     )
-    import main
+    import apps.main as main
 
     main.main()
     # Verify JSON file
@@ -154,7 +158,7 @@ def test_export_json_from_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
 def test_import_json_to_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
     """Test CLI --import-json with full SQLite URL to import JSON data."""
     # Prepare JSON from sample ODS
-    from orm import load_data_from_ods
+    from storage.orm import load_data_from_ods
 
     db0 = tmp_path / "init.db"
     eng0 = load_data_from_ods(sample_ods, str(db0))
@@ -168,9 +172,9 @@ def test_import_json_to_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
     monkeypatch.setattr(
         sys,
         "argv",
-        ["main.py", "--export-json", str(json_file), "--db-url", f"sqlite:///{db0}"],
+        ["apps/main.py", "--export-json", str(json_file), "--db-url", f"sqlite:///{db0}"],
     )
-    import main
+    import apps.main as main
 
     main.main()
     assert json_file.exists(), "JSON not created from DB"
@@ -179,7 +183,7 @@ def test_import_json_to_db_cli_with_url(tmp_path, sample_ods, monkeypatch):
     monkeypatch.setattr(
         sys,
         "argv",
-        ["main.py", "--import-json", str(json_file), "--db-url", f"sqlite:///{new_db}"],
+        ["apps/main.py", "--import-json", str(json_file), "--db-url", f"sqlite:///{new_db}"],
     )
     main.main()
     # Verify imported DB has tables

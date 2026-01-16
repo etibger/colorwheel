@@ -9,7 +9,7 @@ import sqlite3
 
 import pytest
 
-from ui_converters import (
+from ui.ui_converters import (
     db_to_json,
     db_to_ods,
     json_to_db,

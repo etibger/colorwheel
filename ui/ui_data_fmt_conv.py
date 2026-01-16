@@ -7,12 +7,13 @@ Launches a Textual UI for converting between ODS, SQL DB, JSON, and PNG formats.
 
 Usage
 -----
-Run ``python ui_data_fmt_conv.py`` to start the interface.
+Run ``python ui/ui_data_fmt_conv.py`` to start the interface.
 """
 
 import argparse
 import logging
 import sys
+from pathlib import Path
 
 from textual.widgets import (
     Button,
@@ -25,7 +26,11 @@ from textual.widgets import (
     Static,
 )
 
-from ui_converters import handle_conversion
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from ui.ui_converters import handle_conversion
 
 
 def verbosity_to_loglevel(verbosity: int) -> int:

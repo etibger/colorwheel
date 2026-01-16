@@ -11,7 +11,7 @@ import sys
 
 import pytest
 
-import ui_master_app
+import ui.ui_master_app as ui_master_app
 
 
 def test_build_launch_command_rejects_unknown():

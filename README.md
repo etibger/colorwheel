@@ -45,7 +45,7 @@ python -m pip install -e .
 After this the gui can be started like:
 
 ```bash
-python3 ui_master_app.py
+python3 ui/ui_master_app.py
 ```
 
 ### Installing with uv
@@ -64,16 +64,16 @@ Run the generator script, export to JSON, or load data into a SQL database:
 
 ```bash
 # Generate color wheel image
-uv run main.py [-o OUTPUT_FILE] [-v] [--use-data] [--data-file PATH]
+uv run apps/main.py [-o OUTPUT_FILE] [-v] [--use-data] [--data-file PATH]
 
 # Export existing database records to JSON
-uv run main.py --db-url sqlite:///pens.db --export-json data/export.json
+uv run apps/main.py --db-url sqlite:///pens.db --export-json data/export.json
 
 # Load pens, inks, and setups into a SQL database
-uv run main.py --db-url sqlite:///pens.db [--data-file PATH]
+uv run apps/main.py --db-url sqlite:///pens.db [--data-file PATH]
 
 # Launch the master UI
-uv run ui_master_app.py
+uv run ui/ui_master_app.py
 ```
 
 ### Options for Main
@@ -91,7 +91,7 @@ uv run ui_master_app.py
 
 ## Interactive Converter UI
 
-The project includes a Textual-based interactive converter interface implemented in `ui_data_fmt_conv.py`. You can:
+The project includes a Textual-based interactive converter interface implemented in `ui/ui_data_fmt_conv.py`. You can:
 
 - Select input format (ODS, SQL DB, JSON)
 - Specify input and output file paths
@@ -104,23 +104,23 @@ Example screenshot:
 
 ### UI CLI & Logging
 
-- **Usage**: launch with `python ui_data_fmt_conv.py [options]` or `uv run ui_data_fmt_conv.py [options]`.
-- **Logging** is set up via `setup_logging()` in `ui_data_fmt_conv.py`:
+- **Usage**: launch with `python ui/ui_data_fmt_conv.py [options]` or `uv run ui/ui_data_fmt_conv.py [options]`.
+- **Logging** is set up via `setup_logging()` in `ui/ui_data_fmt_conv.py`:
   - Logs at INFO level to stderr by default (e.g. conversion start/errors).
 - If verbosity ≥2, DEBUG-level messages are also written to `colorwheel_ui.log`.
 - The logger name is `colorwheel_ui` and uses separate handlers for console and file.
 
 ## Master Control UI
 
-Launch `ui_master_app.py` to choose between data conversion and palette generation:
+Launch `ui/ui_master_app.py` to choose between data conversion and palette generation:
 
-- **Usage**: `python ui_master_app.py` or `uv run ui_master_app.py`.
+- **Usage**: `python ui/ui_master_app.py` or `uv run ui/ui_master_app.py`.
 - Select **Data format conversion** or **Palette generation**.
 - Click **Launch** to open the chosen interface.
 
 ## Configuration
 
-At the top of `main.py`, adjust constants to modify the output:
+At the top of `apps/main.py`, adjust constants to modify the output:
 
 - `WHEEL_SIZE` (int): diameter of the wheel in pixels
 - `LEGEND_WIDTH` (int): width of the legend panel
@@ -161,13 +161,13 @@ erDiagram
 ```
 
 The `data/golden.ods` file contains pen and ink definitions.
-Use the `data_reader.py` module to load detailed setups. It now returns dictionaries keyed by each item's SHA-256-based `id`:
+Use the `storage/data_reader.py` module to load detailed setups. It now returns dictionaries keyed by each item's SHA-256-based `id`:
 
 Note that each `FountainPen`, `Ink`, and `PenSetup` now includes an `id` attribute
 generated as a SHA-256 hash of its key fields.
 
 ```python
-from data_reader import DataReader
+from storage.data_reader import DataReader
 
 # initialize reader (parses and builds objects)
 reader = DataReader('data/golden.ods')
@@ -189,11 +189,11 @@ for setup in reader.setups:
 
 ### Database ORM
 
-Persist pens, inks, and setups to a SQL database using the SQLAlchemy ORM in `orm.py`:
+Persist pens, inks, and setups to a SQL database using the SQLAlchemy ORM in `storage/orm.py`:
 
 ```python
 from sqlalchemy.orm import sessionmaker
-from orm import load_data_from_ods, FountainPen, Ink, PenSetup
+from storage.orm import load_data_from_ods, FountainPen, Ink, PenSetup
 
 # Load data into SQLite database
     'data/golden.ods',
@@ -234,7 +234,7 @@ for pen in pens:
 - **UI tests** (`tests/test_ui_app.py`) launch ConverterApp in headless mode and verify:
   - Smoke test clicks Run without errors
   - End-to-end conversion flows for supported format combinations
-- **Converter function tests** (`tests/test_ui_conversion.py`) exercise each handler in `ui_converters.py`:
+- **Converter function tests** (`tests/test_ui_conversion.py`) exercise each handler in `ui/ui_converters.py`:
   - Database-to-PNG and ODS-to-PNG image comparisons
   - ODS/DB ↔ JSON round-trip consistency
   - File existence and schema validations

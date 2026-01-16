@@ -8,7 +8,7 @@ palette generation UIs.
 
 Usage
 -----
-Run ``python ui_master_app.py`` to start the selector UI.
+Run ``python ui/ui_master_app.py`` to start the selector UI.
 """
 
 import argparse

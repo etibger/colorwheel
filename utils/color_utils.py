@@ -1,5 +1,5 @@
 """
-.. module:: color_utils
+.. module:: utils.color_utils
    :noindex:
    :synopsis: Color space conversion utilities.
 
@@ -17,7 +17,7 @@ import math
 import os
 import pickle
 
-from color_name_api import get_color_name_from_api
+from apis.color_name_api import get_color_name_from_api
 
 # Minimal curated set of color names, used for readable labels.
 # Includes common CSS names plus selected custom entries (e.g., "Candy Green").

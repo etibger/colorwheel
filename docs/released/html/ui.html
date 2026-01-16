@@ -38,18 +38,18 @@
 <p>Three Textual-based interfaces ship with the project:</p>
 <section id="master-ui">
 <h2>Master UI<a class="headerlink" href="#master-ui" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ui_master_app.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">MasterApp</span></code> for choosing between the available UIs.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ui/ui_master_app.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">MasterApp</span></code> for choosing between the available UIs.</p>
 <ul class="simple">
-<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui_master_app.py</span></code>.</p></li>
+<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui/ui_master_app.py</span></code>.</p></li>
 <li><p>Select <strong>Data format conversion</strong> or <strong>Palette generation</strong>.</p></li>
 <li><p>Click <strong>Launch</strong> to open the chosen interface.</p></li>
 </ul>
 </section>
 <section id="converter-ui">
 <h2>Converter UI<a class="headerlink" href="#converter-ui" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ui_data_fmt_conv.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">ConverterApp</span></code> for format conversions (ODS, SQL DB, JSON, PNG).</p>
+<p><code class="docutils literal notranslate"><span class="pre">ui/ui_data_fmt_conv.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">ConverterApp</span></code> for format conversions (ODS, SQL DB, JSON, PNG).</p>
 <ul class="simple">
-<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui_data_fmt_conv.py</span></code>.</p></li>
+<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui/ui_data_fmt_conv.py</span></code>.</p></li>
 <li><p>Choose input/output formats via radio buttons.</p></li>
 <li><p>Provide file paths in the input/output fields and click <strong>Run</strong>.</p></li>
 <li><p>Progress and errors are logged to <code class="docutils literal notranslate"><span class="pre">colorwheel_textual.log</span></code>.</p></li>
@@ -57,9 +57,9 @@
 </section>
 <section id="palette-ui">
 <h2>Palette UI<a class="headerlink" href="#palette-ui" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ui_color_palett_app.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">PaletteApp</span></code> for palette exploration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ui/ui_color_palett_app.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">PaletteApp</span></code> for palette exploration.</p>
 <ul class="simple">
-<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui_color_palett_app.py</span></code>.</p></li>
+<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui/ui_color_palett_app.py</span></code>.</p></li>
 <li><p>Pick a base color manually or highlight an ink from the loaded ODS palette.</p></li>
 <li><p>Select a palette strategy (tetradic, square scheme, temperature-driven, value-driven, or OKLCH).</p></li>
 <li><p>Click <strong>Generate palette</strong> to see the computed colors and their closest available inks, including brand/name metadata.</p></li>

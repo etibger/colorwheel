@@ -1,5 +1,5 @@
 """
-.. module:: data_reader
+.. module:: storage.data_reader
    :noindex:
    :synopsis: Read pen and ink data from an ODS spreadsheet.
 

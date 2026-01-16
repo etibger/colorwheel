@@ -60,7 +60,7 @@ release-docs: docs-html
 ## Regenerate golden reference files from the ODS source
 regenerate-golden:
 	@echo "Regenerating golden files from data/golden.ods"
-	@uv run main.py --data-file data/golden.ods --db-url sqlite:///data/golden.db
-	@uv run main.py --data-file data/golden.ods --export-json data/golden.json
-	@uv run main.py --data-file data/golden.ods --use-data -o data/golden.png
+	@uv run apps/main.py --data-file data/golden.ods --db-url sqlite:///data/golden.db
+	@uv run apps/main.py --data-file data/golden.ods --export-json data/golden.json
+	@uv run apps/main.py --data-file data/golden.ods --use-data -o data/golden.png
 	@echo "Golden files regenerated: data/golden.db, data/golden.json, data/golden.png"

@@ -11,20 +11,20 @@ from PIL import Image, ImageDraw, ImageFont
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from draw import IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
-from orm import init_db
+from utils.draw import IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
+from storage.orm import init_db
 
 
 def sql_to_png(in_path: str, out_path: str):
     """Convert SQL DB file to PNG via wheel generator."""
-    from main import generate_wheel_from_db
+    from apps.main import generate_wheel_from_db
 
     generate_wheel_from_db(in_path, out_path)
 
 
 def ods_to_json(in_path: str, out_path: str):
     """Read ODS spreadsheet and export data to JSON file."""
-    from data_reader import DataReader
+    from storage.data_reader import DataReader
 
     reader = DataReader(in_path)
     data = {
@@ -46,14 +46,14 @@ def ods_to_json(in_path: str, out_path: str):
 
 def ods_to_db(in_path: str, out_path: str):
     """Load ODS data into a fresh SQL DB file."""
-    from orm import load_data_from_ods
+    from storage.orm import load_data_from_ods
 
     load_data_from_ods(in_path, out_path)
 
 
 def ods_to_png(in_path: str, out_path: str):
     """Convert ODS file directly to PNG by staging a temp DB."""
-    from orm import load_data_from_ods
+    from storage.orm import load_data_from_ods
 
     temp = Path(out_path).with_suffix(".sqlite")
     load_data_from_ods(in_path, str(temp))
@@ -62,7 +62,7 @@ def ods_to_png(in_path: str, out_path: str):
 
 def db_to_json(in_path: str, out_path: str):
     """Export database tables to JSON structure file."""
-    from orm import FountainPen, Ink, PenSetup
+    from storage.orm import FountainPen, Ink, PenSetup
 
     engine = create_engine(f"sqlite:///{in_path}")
     Session = sessionmaker(bind=engine)
@@ -157,7 +157,7 @@ def json_to_db(in_path: str, out_path: str):
     engine = init_db(db_url)
     Session = sessionmaker(bind=engine)
     session = Session()
-    from orm import FountainPen, Ink, PenSetup
+    from storage.orm import FountainPen, Ink, PenSetup
 
     for p in data.get("pens", []):
         session.add(FountainPen(**p))

@@ -1,7 +1,7 @@
 import sys
 import pytest
 
-import color_palett_app as app
+import apps.color_palett_app as app
 
 
 def test_find_closest_simple():

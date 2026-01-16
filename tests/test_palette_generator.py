@@ -1,6 +1,6 @@
 import pytest
 
-import palette_generator as pg
+import utils.palette_generator as pg
 
 
 def test_hex_rgb_roundtrip():

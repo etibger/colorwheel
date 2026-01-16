@@ -6,9 +6,9 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from data_reader import DataReader
-from main import generate_wheel_from_db
-from orm import FountainPen, Ink, PenSetup, load_data_from_ods
+from storage.data_reader import DataReader
+from apps.main import generate_wheel_from_db
+from storage.orm import FountainPen, Ink, PenSetup, load_data_from_ods
 
 
 @pytest.fixture(scope="module")

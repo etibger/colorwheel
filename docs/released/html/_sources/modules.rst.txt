@@ -6,17 +6,17 @@ This section contains the API reference for each module.
 Core utilities
 --------------
 
-.. automodule:: color_utils
+.. automodule:: utils.color_utils
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: palette_generator
+.. automodule:: utils.palette_generator
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: config_loader
+.. automodule:: config.config_loader
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,17 +24,17 @@ Core utilities
 Data and persistence
 --------------------
 
-.. automodule:: data_reader
+.. automodule:: storage.data_reader
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: orm
+.. automodule:: storage.orm
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: color_name_api
+.. automodule:: apis.color_name_api
     :members:
     :undoc-members:
     :show-inheritance:
@@ -42,7 +42,7 @@ Data and persistence
 Rendering
 ---------
 
-.. automodule:: draw
+.. automodule:: utils.draw
     :members:
     :undoc-members:
     :show-inheritance:
@@ -50,7 +50,7 @@ Rendering
 UI helpers
 ----------
 
-.. automodule:: ui_converters
+.. automodule:: ui.ui_converters
     :members:
     :undoc-members:
     :show-inheritance:
@@ -58,27 +58,27 @@ UI helpers
 Apps and entrypoints
 --------------------
 
-.. automodule:: main
+.. automodule:: apps.main
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: color_palett_app
+.. automodule:: apps.color_palett_app
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: ui_data_fmt_conv
+.. automodule:: ui.ui_data_fmt_conv
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: ui_color_palett_app
+.. automodule:: ui.ui_color_palett_app
     :members:
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: ui_master_app
+.. automodule:: ui.ui_master_app
     :members:
     :undoc-members:
     :show-inheritance:

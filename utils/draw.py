@@ -1,5 +1,5 @@
 """
-.. module:: draw
+.. module:: utils.draw
    :noindex:
    :synopsis: Draw color wheel, markers, and legend.
 
@@ -13,8 +13,8 @@ from typing import List, Tuple
 
 from PIL import Image, ImageDraw, ImageFont
 
-from color_utils import hex_to_rgb, hsv_to_xy, rgb_to_hsv
-from config_loader import load_config
+from utils.color_utils import hex_to_rgb, hsv_to_xy, rgb_to_hsv
+from config.config_loader import load_config
 
 CONFIG = load_config()
 # Configuration constants loaded from config

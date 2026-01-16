@@ -1,5 +1,5 @@
 """
-.. module:: palette_generator
+.. module:: utils.palette_generator
    :noindex:
    :synopsis: Generate 4-color palettes using various strategies.
 
@@ -12,10 +12,10 @@ Provides functions to generate 4-color palettes using various strategies:
 
 import math
 
-from color_utils import (
+from utils.color_utils import (
     hex_to_rgbf as hex_to_rgb,
 )
-from color_utils import (
+from utils.color_utils import (
     hsl_to_rgb,
     oklab_to_rgb,
     rgb_to_hex,

@@ -1,5 +1,5 @@
 """
-.. module:: config_loader
+.. module:: config.config_loader
    :noindex:
    :synopsis: Configuration loader for project-wide settings.
 

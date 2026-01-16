@@ -3,7 +3,7 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from data_reader import DataReader, FountainPen, Ink, PenSetup
+from storage.data_reader import DataReader, FountainPen, Ink, PenSetup
 
 SAMPLE_CONTENT = """<?xml version="1.0"?>
 <office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"

@@ -10,7 +10,7 @@ import json
 import urllib.parse
 import urllib.request
 
-from config_loader import load_config
+from config.config_loader import load_config
 
 CONFIG = load_config()
 API_URL = CONFIG["color_api_url"]

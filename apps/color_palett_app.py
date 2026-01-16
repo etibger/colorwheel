@@ -1,5 +1,5 @@
 """
-.. module:: color_palett_app
+.. module:: apps.color_palett_app
    :noindex:
    :synopsis: Command-line tool to generate 4-color palettes from a base color and strategy.
 
@@ -28,10 +28,10 @@ import argparse
 import logging
 import math
 
-import palette_generator as pg
-from color_utils import format_hex_with_name, hex_to_rgbf
-from config_loader import load_config
-from data_reader import DataReader
+import utils.palette_generator as pg
+from utils.color_utils import format_hex_with_name, hex_to_rgbf
+from config.config_loader import load_config
+from storage.data_reader import DataReader
 
 
 def setup_logging(verbose: int) -> logging.Logger:

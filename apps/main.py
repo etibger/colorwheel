@@ -7,9 +7,9 @@ from PIL import Image, ImageDraw, ImageFont
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from data_reader import DataReader
-from draw import HEX_COLORS, IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
-from orm import FountainPen, Ink, PenSetup, load_data_from_ods
+from storage.data_reader import DataReader
+from utils.draw import HEX_COLORS, IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
+from storage.orm import FountainPen, Ink, PenSetup, load_data_from_ods
 
 
 def generate_wheel_from_db(db_url: str, output_file: str) -> Path:
@@ -210,7 +210,7 @@ def main():
         return
     # Import JSON to SQL DB if requested
     if args.import_json and args.db_url:
-        from ui_converters import json_to_db
+        from ui.ui_converters import json_to_db
 
         json_to_db(args.import_json, args.db_url)
         return

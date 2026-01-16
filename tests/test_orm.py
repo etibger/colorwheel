@@ -5,7 +5,7 @@ from pathlib import Path
 
 from sqlalchemy.orm import sessionmaker
 
-from orm import FountainPen, Ink, PenSetup, load_data_from_ods
+from storage.orm import FountainPen, Ink, PenSetup, load_data_from_ods
 
 # Minimal ODS content for testing
 SAMPLE_XML = """<?xml version="1.0"?>

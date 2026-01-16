@@ -4,7 +4,7 @@ Tests for draw module functions: color wheel, markers, and legend.
 
 from PIL import Image, ImageDraw, ImageFont
 
-from draw import IMAGE_SIZE, WHEEL_SIZE, draw_color_wheel, draw_legend, draw_markers
+from utils.draw import IMAGE_SIZE, WHEEL_SIZE, draw_color_wheel, draw_legend, draw_markers
 
 
 def test_draw_color_wheel_changes_center_pixel():

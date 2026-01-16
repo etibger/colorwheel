@@ -18,11 +18,11 @@ Usage
 
 Run the CLI to generate an image::
 
-  python main.py --output wheel.png
+  python apps/main.py --output wheel.png
 
 To use data from an ODS file::
 
-  python main.py --use-data --data-file data/golden.ods
+  python apps/main.py --use-data --data-file data/golden.ods
 
 Demo
 ----

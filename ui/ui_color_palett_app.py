@@ -8,7 +8,7 @@ and logs the generated palette alongside the closest available inks (brand and n
 
 Usage
 -----
-Run ``python ui_color_palett_app.py`` for the interactive interface, or
+Run ``python ui/ui_color_palett_app.py`` for the interactive interface, or
 use ``PaletteApp().run_test()`` in tests for headless execution.
 """
 
@@ -18,6 +18,7 @@ import os
 import random
 import subprocess
 import sys
+from pathlib import Path
 from typing import Iterable
 
 from PIL import Image, ImageDraw, ImageFont
@@ -37,16 +38,20 @@ from textual.widgets import (
 )
 from textual.widgets.option_list import Option
 
-import palette_generator as pg
-from color_palett_app import STRATEGIES, find_closest
-from color_utils import (
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+import utils.palette_generator as pg
+from apps.color_palett_app import STRATEGIES, find_closest
+from utils.color_utils import (
     format_hex_with_name,
     load_color_name_cache,
     save_color_name_cache,
 )
-from config_loader import load_config
-from data_reader import DataReader
-from draw import IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
+from config.config_loader import load_config
+from storage.data_reader import DataReader
+from utils.draw import IMAGE_SIZE, draw_color_wheel, draw_legend, draw_markers
 
 CONFIG = load_config()
 ODS_PATH = CONFIG["ods_path"]

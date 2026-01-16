@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from color_name_api import get_color_name_from_api
+from apis.color_name_api import get_color_name_from_api
 
 
 class DummyResponse:
@@ -29,7 +29,7 @@ def test_get_color_name_from_api(monkeypatch):
     def fake_urlopen(_req):
         return DummyResponse(payload)
 
-    monkeypatch.setattr("color_name_api.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("apis.color_name_api.urllib.request.urlopen", fake_urlopen)
     assert get_color_name_from_api("#37ce00") == "Candy Green"
 
 
@@ -39,6 +39,6 @@ def test_get_color_name_from_api_missing(monkeypatch):
     def fake_urlopen(_req):
         return DummyResponse(payload)
 
-    monkeypatch.setattr("color_name_api.urllib.request.urlopen", fake_urlopen)
+    monkeypatch.setattr("apis.color_name_api.urllib.request.urlopen", fake_urlopen)
     with pytest.raises(ValueError):
         get_color_name_from_api("#000000")

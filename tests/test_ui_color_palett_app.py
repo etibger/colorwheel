@@ -16,7 +16,7 @@ from pathlib import Path
 import pytest
 from textual.widgets import Input, OptionList, RadioButton
 
-from ui_color_palett_app import LOG_FILE, PaletteApp, init_cli
+from ui.ui_color_palett_app import LOG_FILE, PaletteApp, init_cli
 
 LOG_PATH = Path(LOG_FILE)
 NAME_FMT = "Name({})"
@@ -39,7 +39,7 @@ def clean_palette_log():
 def mock_color_names(monkeypatch):
     """Avoid external API calls; provide deterministic names."""
     monkeypatch.setattr(
-        "color_utils.hex_to_color_name", lambda hx: NAME_FMT.format(hx.lower())
+        "utils.color_utils.hex_to_color_name", lambda hx: NAME_FMT.format(hx.lower())
     )
 
 
@@ -47,11 +47,15 @@ def mock_color_names(monkeypatch):
 def sandbox_color_cache(monkeypatch, tmp_path):
     """Prevent tests from reading/writing the real color name cache file."""
     temp_cache = tmp_path / "color_names.pickle"
-    monkeypatch.setattr("ui_color_palett_app.CACHE_FILE", str(temp_cache))
-    monkeypatch.setattr("ui_color_palett_app.save_color_name_cache", lambda path: None)
-    monkeypatch.setattr("ui_color_palett_app.load_color_name_cache", lambda path: False)
+    monkeypatch.setattr("ui.ui_color_palett_app.CACHE_FILE", str(temp_cache))
     monkeypatch.setattr(
-        "ui_color_palett_app.PREVIEW_FILE",
+        "ui.ui_color_palett_app.save_color_name_cache", lambda path: None
+    )
+    monkeypatch.setattr(
+        "ui.ui_color_palett_app.load_color_name_cache", lambda path: False
+    )
+    monkeypatch.setattr(
+        "ui.ui_color_palett_app.PREVIEW_FILE",
         str(tmp_path / "generated_palette_color_wheel.png"),
     )
 
@@ -60,7 +64,7 @@ def sandbox_color_cache(monkeypatch, tmp_path):
 def sandbox_palette_log(monkeypatch, tmp_path):
     """Isolate log file per worker/process when running in parallel."""
     log_path = tmp_path / "colorwheel_palett_ui.log"
-    monkeypatch.setattr("ui_color_palett_app.LOG_FILE", str(log_path))
+    monkeypatch.setattr("ui.ui_color_palett_app.LOG_FILE", str(log_path))
     globals()["LOG_PATH"] = log_path
 
 
@@ -294,7 +298,9 @@ def test_palette_ui_random_base(monkeypatch):
         async with PaletteApp().run_test(size=TEST_SIZE) as pilot:
             await pilot.pause(0.3)
             target = pilot.app.available_colors[-1]
-            monkeypatch.setattr("ui_color_palett_app.random.choice", lambda seq: target)
+            monkeypatch.setattr(
+                "ui.ui_color_palett_app.random.choice", lambda seq: target
+            )
             pilot.app.query_one("#random_base").press()
             await pilot.pause(0.2)
             base_val = pilot.app.query_one("#base_input", Input).value
@@ -346,7 +352,7 @@ def test_palette_ui_combined_navigation():
 def test_palette_ui_generates_preview_file(monkeypatch, tmp_path):
     """Palette generation should render a preview PNG via draw helpers."""
     preview_path = tmp_path / "preview.png"
-    monkeypatch.setattr("ui_color_palett_app.PREVIEW_FILE", str(preview_path))
+    monkeypatch.setattr("ui.ui_color_palett_app.PREVIEW_FILE", str(preview_path))
 
     async def run_case():
         async with PaletteApp().run_test(size=TEST_SIZE) as pilot:

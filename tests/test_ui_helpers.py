@@ -11,7 +11,7 @@ import sys
 
 import pytest
 
-import ui_data_fmt_conv as ui
+import ui.ui_data_fmt_conv as ui
 
 def test_verbosity_to_loglevel():
     """Map verbosity counts to logging levels correctly."""
