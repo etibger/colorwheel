@@ -26,9 +26,10 @@ def test_draw_markers_returns_expected_positions_and_draws():
     positions = draw_markers(draw, markers, font)
     # Should return entry for each marker: (index, name, hex, rgb, x, y)
     assert len(positions) == 2
-    idx, name, hex_code, rgb, x, y = positions[0]
+    idx, name, hex_code, rgb, x, y, marker_type = positions[0]
     assert idx == 1 and name == "Test1" and hex_code == "#FF0000"
     assert isinstance(rgb, tuple) and len(rgb) == 3
+    assert marker_type == "circle"
     # Tuple structure verified; skip pixel color assertion (outline thickness varies)
 
 
@@ -36,10 +37,10 @@ def test_draw_legend_places_swatches_and_text():
     """draw_legend should place colored swatches at calculated legend positions."""
     img = Image.new("RGB", IMAGE_SIZE, "white")
     draw = ImageDraw.Draw(img)
-    # simulate marker positions: (i, name, hex, rgb, x, y)
+    # simulate marker positions: (i, name, hex, rgb, x, y, marker_type)
     marker_positions = [
-        (1, "InkA", "#123456", (18, 52, 86), 0, 0),
-        (2, "InkB", "#654321", (101, 67, 33), 0, 0),
+        (1, "InkA", "#123456", (18, 52, 86), 0, 0, "circle"),
+        (2, "InkB", "#654321", (101, 67, 33), 0, 0, "cross"),
     ]
     font = ImageFont.load_default()
     font_bold = ImageFont.load_default()

@@ -380,7 +380,12 @@ class PaletteApp(App):
         self, palette: list[tuple[str, str]], out_path: str | None = None
     ) -> None:
         """
-        Render palette preview PNG using draw.py helpers.
+        Render the palette preview PNG using the drawing helpers.
+
+        The preview shows only the four generated palette colors (circle markers)
+        and their corresponding closest available inks (cross markers). The legend
+        mirrors this ordering, labeling palette colors as ``N.`` and closest inks
+        as ``Nx`` for clarity.
 
         :param palette: List of ``(color, closest)`` tuples.
         :param out_path: Optional override path for the preview PNG.
@@ -394,7 +399,14 @@ class PaletteApp(App):
             font_bold = ImageFont.truetype("DejaVuSans.ttf", 18)
         except IOError:
             font = font_bold = ImageFont.load_default()
-        markers = [(format_hex_with_name(color), color) for color, _closest in palette]
+        markers: list[tuple[str, str] | tuple[str, str, str]] = []
+        for idx, (color, closest) in enumerate(palette, start=1):
+            base_label = format_hex_with_name(color)
+            markers.append((f"{idx}. {base_label}", color, "circle"))
+            closest_label = self._label_for_hex(closest) or format_hex_with_name(
+                closest
+            )
+            markers.append((f"{idx}x {closest_label}", closest, "cross"))
         draw_color_wheel(img)
         positions = draw_markers(dr, markers, font_bold)
         draw_legend(dr, positions, font, font_bold)
