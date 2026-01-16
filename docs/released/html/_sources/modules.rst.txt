@@ -55,11 +55,6 @@ UI helpers
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: ui
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 Apps and entrypoints
 --------------------
 
@@ -73,7 +68,17 @@ Apps and entrypoints
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: ui_data_fmt_conv
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 .. automodule:: ui_color_palett_app
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+.. automodule:: ui_master_app
     :members:
     :undoc-members:
     :show-inheritance:

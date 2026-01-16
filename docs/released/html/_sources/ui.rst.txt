@@ -1,13 +1,21 @@
 User Interfaces
 ===============
 
-Two Textual-based interfaces ship with the project:
+Three Textual-based interfaces ship with the project:
+
+Master UI
+---------
+``ui_master_app.py`` exposes ``MasterApp`` for choosing between the available UIs.
+
+* Launch with ``python ui_master_app.py``.
+* Select **Data format conversion** or **Palette generation**.
+* Click **Launch** to open the chosen interface.
 
 Converter UI
 ------------
-``ui.py`` exposes ``ConverterApp`` for format conversions (ODS, SQL DB, JSON, PNG).
+``ui_data_fmt_conv.py`` exposes ``ConverterApp`` for format conversions (ODS, SQL DB, JSON, PNG).
 
-* Launch with ``python ui.py``.
+* Launch with ``python ui_data_fmt_conv.py``.
 * Choose input/output formats via radio buttons.
 * Provide file paths in the input/output fields and click **Run**.
 * Progress and errors are logged to ``colorwheel_textual.log``.
@@ -24,6 +32,7 @@ Palette UI
 
 Testing UIs
 -----------
-Both UIs support Textual's ``run_test`` helper for headless testing. See
-``tests/test_ui_app.py`` and ``tests/test_ui_color_palett_app.py`` for examples
+All UIs support Textual's ``run_test`` helper for headless testing. See
+``tests/test_ui_app.py``, ``tests/test_ui_color_palett_app.py``, and
+``tests/test_ui_master_app.py`` for examples
 that drive the widgets, click buttons, and assert on generated files or log output.

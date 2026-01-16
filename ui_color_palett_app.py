@@ -153,10 +153,20 @@ class PaletteApp(App):
     #input_methods {
         height: auto;
         padding: 1 1;
-        min-height: 3;
+        min-height: 5;
         width: 100%;
     }
-    #input_methods > * {
+    #label_base,
+    #base_input,
+    #base_button_row,
+    #ods_hint {
+        width: 100%;
+        height: auto;
+    }
+    #base_input {
+        margin-bottom: 1;
+    }
+    #base_button_row > * {
         margin-right: 1;
     }
     #palette_preview {
@@ -222,11 +232,12 @@ class PaletteApp(App):
             with VerticalScroll(id="logger_scroll"):
                 yield Log(id="logger", highlight=False)
             yield Static("Palette preview not generated yet.", id="palette_preview")
-        with Horizontal(id="input_methods"):
+        with VerticalScroll(id="input_methods"):
             yield Static("Enter or choose a base color:", id="label_base")
             yield Input(placeholder="#ff0000", id="base_input")
-            yield Button("Use highlighted ink", id="use_selected")
-            yield Button("Random available color", id="random_base")
+            with Horizontal(id="base_button_row"):
+                yield Button("Use highlighted ink", id="use_selected")
+                yield Button("Random available color", id="random_base")
             yield Static(f"Using ODS palette source: {ODS_PATH}", id="ods_hint")
         yield Button("Open preview", id="open_preview")
         yield Footer()
@@ -237,9 +248,12 @@ class PaletteApp(App):
         self.log_widget = self.query_one("#logger", Log)
         self.log_file = open(LOG_FILE, "a", encoding="utf-8")
         self._mounted = True
+        base_input = self.query_one("#base_input", Input)
         if self.available_colors:
             first_hex, _ = self.available_colors[0]
-            self.query_one("#base_input", Input).value = first_hex
+            base_input.value = first_hex
+            option_list = self.query_one("#available_colors", OptionList)
+            option_list.focus()
         logger.debug("on_mount() complete")
 
     def on_unmount(self) -> None:

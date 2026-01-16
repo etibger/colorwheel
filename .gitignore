@@ -12,14 +12,10 @@ wheels/
 .coverage
 
 # Generated files
-colorwheel.log
+*.log
+generated_palette_color_wheel.png
 color_wheel_with_legend.png
 data/output.json
-colorwheel_textual.log
-colorwheel_debug.log
-colorwheel_ui.log
-colorwheel_palett_ui.log
-generated_palette_color_wheel.png
 **tmp*
 data/golden.sqlite
 

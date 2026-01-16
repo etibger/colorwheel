@@ -1,5 +1,13 @@
 """
 Textual-based interactive interface for data format conversion and color wheel output.
+
+Overview
+--------
+Launches a Textual UI for converting between ODS, SQL DB, JSON, and PNG formats.
+
+Usage
+-----
+Run ``python ui_data_fmt_conv.py`` to start the interface.
 """
 
 import argparse
@@ -21,6 +29,12 @@ from ui_converters import handle_conversion
 
 
 def verbosity_to_loglevel(verbosity: int) -> int:
+    """
+    Map verbosity count to logging levels.
+
+    :param verbosity: Count of ``-v`` flags.
+    :returns: Logging level value.
+    """
     # Map verbosity count to logging levels: 0->ERROR, 1->WARNING, 2->INFO, >=3->DEBUG
     if verbosity <= 0:
         return logging.ERROR
@@ -32,7 +46,12 @@ def verbosity_to_loglevel(verbosity: int) -> int:
 
 
 def setup_logging(verbose: int) -> logging.Logger:
-    """Configure and return a logger based on verbosity count."""
+    """
+    Configure and return a logger based on verbosity count.
+
+    :param verbose: Count of ``-v`` flags.
+    :returns: Configured logger instance.
+    """
     level = verbosity_to_loglevel(verbose)
     logger = logging.getLogger("colorwheel_ui")
     logger.setLevel(level)
@@ -53,8 +72,12 @@ def setup_logging(verbose: int) -> logging.Logger:
     return logger
 
 
-def init_cli() -> tuple[int, logging.Logger]:
-    """Parse CLI args and configure logger."""
+def init_cli() -> logging.Logger:
+    """
+    Parse CLI args and configure logger.
+
+    :returns: Logger configured according to CLI flags.
+    """
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument(
         "-v",
@@ -68,7 +91,7 @@ def init_cli() -> tuple[int, logging.Logger]:
     args, _ = parser.parse_known_args()
     logger = setup_logging(args.verbose)
     # Debug initial messages based on verbose
-    logger.debug("ui.py execution begins (verbosity=%d)", args.verbose)
+    logger.debug("ui_data_fmt_conv.py execution begins (verbosity=%d)", args.verbose)
     logger.debug("attempting to import textual modules")
     # Return only configured logger
     return logger
@@ -88,11 +111,14 @@ logger.debug("Module imported")
 
 
 class ConverterApp(App):
-    """A simple UI to choose input/output formats and run conversion."""
+    """
+    UI for selecting input/output formats and running conversions.
 
+    Notes
+    -----
+    Uses default Textual styling and logs to ``colorwheel_textual.log``.
     """
-    CSS styling for layout.
-    """
+
     # Keybindings: quit app
     BINDINGS = [
         ("q", "quit", "Quit"),

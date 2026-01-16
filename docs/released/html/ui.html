@@ -35,12 +35,21 @@
             
   <section id="user-interfaces">
 <h1>User Interfaces<a class="headerlink" href="#user-interfaces" title="Link to this heading">¶</a></h1>
-<p>Two Textual-based interfaces ship with the project:</p>
+<p>Three Textual-based interfaces ship with the project:</p>
+<section id="master-ui">
+<h2>Master UI<a class="headerlink" href="#master-ui" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">ui_master_app.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">MasterApp</span></code> for choosing between the available UIs.</p>
+<ul class="simple">
+<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui_master_app.py</span></code>.</p></li>
+<li><p>Select <strong>Data format conversion</strong> or <strong>Palette generation</strong>.</p></li>
+<li><p>Click <strong>Launch</strong> to open the chosen interface.</p></li>
+</ul>
+</section>
 <section id="converter-ui">
 <h2>Converter UI<a class="headerlink" href="#converter-ui" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">ui.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">ConverterApp</span></code> for format conversions (ODS, SQL DB, JSON, PNG).</p>
+<p><code class="docutils literal notranslate"><span class="pre">ui_data_fmt_conv.py</span></code> exposes <code class="docutils literal notranslate"><span class="pre">ConverterApp</span></code> for format conversions (ODS, SQL DB, JSON, PNG).</p>
 <ul class="simple">
-<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui.py</span></code>.</p></li>
+<li><p>Launch with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui_data_fmt_conv.py</span></code>.</p></li>
 <li><p>Choose input/output formats via radio buttons.</p></li>
 <li><p>Provide file paths in the input/output fields and click <strong>Run</strong>.</p></li>
 <li><p>Progress and errors are logged to <code class="docutils literal notranslate"><span class="pre">colorwheel_textual.log</span></code>.</p></li>
@@ -59,8 +68,9 @@
 </section>
 <section id="testing-uis">
 <h2>Testing UIs<a class="headerlink" href="#testing-uis" title="Link to this heading">¶</a></h2>
-<p>Both UIs support Textual’s <code class="docutils literal notranslate"><span class="pre">run_test</span></code> helper for headless testing. See
-<code class="docutils literal notranslate"><span class="pre">tests/test_ui_app.py</span></code> and <code class="docutils literal notranslate"><span class="pre">tests/test_ui_color_palett_app.py</span></code> for examples
+<p>All UIs support Textual’s <code class="docutils literal notranslate"><span class="pre">run_test</span></code> helper for headless testing. See
+<code class="docutils literal notranslate"><span class="pre">tests/test_ui_app.py</span></code>, <code class="docutils literal notranslate"><span class="pre">tests/test_ui_color_palett_app.py</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">tests/test_ui_master_app.py</span></code> for examples
 that drive the widgets, click buttons, and assert on generated files or log output.</p>
 </section>
 </section>
@@ -95,6 +105,7 @@ that drive the widgets, click buttons, and assert on generated files or log outp
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#master-ui">Master UI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#converter-ui">Converter UI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#palette-ui">Palette UI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing-uis">Testing UIs</a></li>

@@ -45,7 +45,7 @@ python -m pip install -e .
 After this the gui can be started like:
 
 ```bash
-python3 ui.py
+python3 ui_master_app.py
 ```
 
 ### Installing with uv
@@ -72,8 +72,8 @@ uv run main.py --db-url sqlite:///pens.db --export-json data/export.json
 # Load pens, inks, and setups into a SQL database
 uv run main.py --db-url sqlite:///pens.db [--data-file PATH]
 
-# Launch the interactive converter UI
-uv run ui.py
+# Launch the master UI
+uv run ui_master_app.py
 ```
 
 ### Options for Main
@@ -91,7 +91,7 @@ uv run ui.py
 
 ## Interactive Converter UI
 
-The project includes a Textual-based interactive converter interface implemented in `ui.py`. You can:
+The project includes a Textual-based interactive converter interface implemented in `ui_data_fmt_conv.py`. You can:
 
 - Select input format (ODS, SQL DB, JSON)
 - Specify input and output file paths
@@ -104,11 +104,19 @@ Example screenshot:
 
 ### UI CLI & Logging
 
-- **Usage**: launch with `python ui.py [options]` or `uv run ui.py [options]`.
-- **Logging** is set up via `setup_logging()` in `ui.py`:
+- **Usage**: launch with `python ui_data_fmt_conv.py [options]` or `uv run ui_data_fmt_conv.py [options]`.
+- **Logging** is set up via `setup_logging()` in `ui_data_fmt_conv.py`:
   - Logs at INFO level to stderr by default (e.g. conversion start/errors).
-  - If verbosity ≥2, DEBUG-level messages are also written to `colorwheel_ui.log`.
-  - The logger name is `colorwheel_ui` and uses separate handlers for console and file.
+- If verbosity ≥2, DEBUG-level messages are also written to `colorwheel_ui.log`.
+- The logger name is `colorwheel_ui` and uses separate handlers for console and file.
+
+## Master Control UI
+
+Launch `ui_master_app.py` to choose between data conversion and palette generation:
+
+- **Usage**: `python ui_master_app.py` or `uv run ui_master_app.py`.
+- Select **Data format conversion** or **Palette generation**.
+- Click **Launch** to open the chosen interface.
 
 ## Configuration
 

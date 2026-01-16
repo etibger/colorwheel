@@ -18,7 +18,9 @@ import filecmp  # File comparison utility to validate generated outputs
 import pytest  # Pytest framework for writing and running tests
 from textual.widgets import Input  # Textual widget for simulating user text input
 
-from ui import ConverterApp  # Main application class under test (Textual-based GUI)
+from ui_data_fmt_conv import (
+    ConverterApp,  # Main application class under test (Textual-based GUI)
+)
 
 
 def test_ui_click_run_no_error():

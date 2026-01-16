@@ -1,5 +1,9 @@
 """
-Unit tests for ui.py helper functions: verbosity_to_loglevel and init_cli.
+Unit tests for ``ui_data_fmt_conv.py`` helper functions.
+
+Overview
+--------
+Exercises ``verbosity_to_loglevel`` and ``init_cli``.
 """
 
 import logging
@@ -7,7 +11,7 @@ import sys
 
 import pytest
 
-import ui
+import ui_data_fmt_conv as ui
 
 def test_verbosity_to_loglevel():
     """Map verbosity counts to logging levels correctly."""
@@ -17,10 +21,10 @@ def test_verbosity_to_loglevel():
     assert ui.verbosity_to_loglevel(3) == logging.DEBUG
 
 @pytest.mark.parametrize("argv, expected_level", [
-    (["ui.py"], logging.ERROR),
-    (["ui.py", "-v"], logging.WARNING),
-    (["ui.py", "-vv"], logging.INFO),
-    (["ui.py", "-vvv"], logging.DEBUG),
+    (["ui_data_fmt_conv.py"], logging.ERROR),
+    (["ui_data_fmt_conv.py", "-v"], logging.WARNING),
+    (["ui_data_fmt_conv.py", "-vv"], logging.INFO),
+    (["ui_data_fmt_conv.py", "-vvv"], logging.DEBUG),
 ])
 def test_init_cli_sets_logger_level(monkeypatch, argv, expected_level):
     """init_cli returns a logger with level matching verbosity flags."""
