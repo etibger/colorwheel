@@ -1,5 +1,6 @@
 """
 .. module:: palette_generator
+   :noindex:
    :synopsis: Generate 4-color palettes using various strategies.
 
 Provides functions to generate 4-color palettes using various strategies:

@@ -35,7 +35,9 @@
   <section id="module-reference">
 <h1>Module Reference<a class="headerlink" href="#module-reference" title="Link to this heading">¶</a></h1>
 <p>This section contains the API reference for each module.</p>
-<p id="module-color_utils">This module provides utilities for converting between various color representations
+<section id="module-color_utils">
+<span id="core-utilities"></span><h2>Core utilities<a class="headerlink" href="#module-color_utils" title="Link to this heading">¶</a></h2>
+<p>This module provides utilities for converting between various color representations
 and color spaces:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://en.wikipedia.org/wiki/SRGB">sRGB</a>: Standard RGB color space.</p></li>
@@ -270,7 +272,160 @@ saturation and lightness in [0..1].</p>
 </dl>
 </dd></dl>
 
-<p id="module-data_reader">This module parses an OpenDocument Spreadsheet (ODS) to extract fountain pen
+<p id="module-palette_generator">Provides functions to generate 4-color palettes using various strategies:
+1) Color-wheel-based: Tetradic, Square Scheme, Split-Complementary + Accent
+2) Color Temperature: 2 Warm + 2 Cool, Dominant Temperature + Contrast Pair
+3) Value-Driven: Value Ladder + Accent
+4) Perceptual Modern: OKLCH/LAB space sampling</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="palette_generator.dominant_temperature_contrast">
+<span class="sig-prename descclassname"><span class="pre">palette_generator.</span></span><span class="sig-name descname"><span class="pre">dominant_temperature_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#palette_generator.dominant_temperature_contrast" title="Link to this definition">¶</a></dt>
+<dd><p>Select two colors from the dominant temperature category and two from the opposite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>colors</strong> (<em>list</em>) – List of color strings in #RRGGBB format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Four selected color strings (two dominant, two contrast).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If not enough colors in either category.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="palette_generator.oklch_sampling">
+<span class="sig-prename descclassname"><span class="pre">palette_generator.</span></span><span class="sig-name descname"><span class="pre">oklch_sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_hex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#palette_generator.oklch_sampling" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a 4-color palette by sampling equal hue intervals in OKLCH space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>base_hex</strong> (<em>str</em>) – Base color in #RRGGBB format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of four hex color strings sampled in OKLCH space.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="palette_generator.split_complementary_accent">
+<span class="sig-prename descclassname"><span class="pre">palette_generator.</span></span><span class="sig-name descname"><span class="pre">split_complementary_accent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_hex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#palette_generator.split_complementary_accent" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a split-complementary palette with an accent color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>base_hex</strong> (<em>str</em>) – Base color in #RRGGBB format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of four hex color strings (base, two splits, accent).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="palette_generator.square_scheme">
+<span class="sig-prename descclassname"><span class="pre">palette_generator.</span></span><span class="sig-name descname"><span class="pre">square_scheme</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_hex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#palette_generator.square_scheme" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a square color scheme from a base color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>base_hex</strong> (<em>str</em>) – Base color in #RRGGBB format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of four hex color strings forming a square scheme.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="palette_generator.tetradic">
+<span class="sig-prename descclassname"><span class="pre">palette_generator.</span></span><span class="sig-name descname"><span class="pre">tetradic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_hex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#palette_generator.tetradic" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a tetradic (double complementary) color palette from a base color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>base_hex</strong> (<em>str</em>) – Base color in #RRGGBB format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of four hex color strings forming a tetradic palette.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="palette_generator.two_warm_two_cool">
+<span class="sig-prename descclassname"><span class="pre">palette_generator.</span></span><span class="sig-name descname"><span class="pre">two_warm_two_cool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#palette_generator.two_warm_two_cool" title="Link to this definition">¶</a></dt>
+<dd><p>Select two warm and two cool colors from a list of hex colors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>colors</strong> (<em>list</em>) – List of color strings in #RRGGBB format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Four selected color strings (two warm, two cool).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If fewer than two warm or two cool colors available.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="palette_generator.value_ladder_accent">
+<span class="sig-prename descclassname"><span class="pre">palette_generator.</span></span><span class="sig-name descname"><span class="pre">value_ladder_accent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#palette_generator.value_ladder_accent" title="Link to this definition">¶</a></dt>
+<dd><p>Create a palette by selecting three colors with evenly spaced lightness and one accent by highest saturation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>colors</strong> (<em>list</em>) – List of color strings in #RRGGBB format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Four selected color strings (three ladder, one accent).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If fewer than four colors provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-config_loader">Configuration is read from <code class="docutils literal notranslate"><span class="pre">config.toml</span></code> located beside this module. If the file
+is missing or malformed, sane defaults are applied. Sphinx will include this
+module in the API docs for easy reference.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="config_loader.load_config">
+<span class="sig-prename descclassname"><span class="pre">config_loader.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#config_loader.load_config" title="Link to this definition">¶</a></dt>
+<dd><p>Load configuration from <code class="docutils literal notranslate"><span class="pre">config.toml</span></code> with defaults as fallback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mapping of configuration keys to values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-data_reader">
+<span id="data-and-persistence"></span><h2>Data and persistence<a class="headerlink" href="#module-data_reader" title="Link to this heading">¶</a></h2>
+<p>This module parses an OpenDocument Spreadsheet (ODS) to extract fountain pen
 and ink information into Python data structures.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="data_reader.DataReader">
@@ -479,235 +634,6 @@ ink_brand, color_name, srgb_h, srgb_s, srgb_v, rgb_hex</p>
 
 </dd></dl>
 
-<p id="module-draw">This module provides functions to render a color wheel, annotate markers,
-and create a legend in the generated image.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="draw.draw_color_wheel">
-<span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_color_wheel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#draw.draw_color_wheel" title="Link to this definition">¶</a></dt>
-<dd><p>Draw the color wheel background on the provided image.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>img</strong> (<em>PIL.Image.Image</em>) – PIL Image instance (mode ‘RGB’) to render the wheel onto.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="draw.draw_legend">
-<span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageDraw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_positions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_bold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#draw.draw_legend" title="Link to this definition">¶</a></dt>
-<dd><p>Draw a legend panel showing marker swatches and labels.</p>
-<p>The legend mirrors the marker list and annotates crosses with an <code class="docutils literal notranslate"><span class="pre">x</span></code> suffix
-(for closest-ink markers). Ordering and numbering follow the sequence returned
-by <a class="reference internal" href="#draw.draw_markers" title="draw.draw_markers"><code class="xref py py-func docutils literal notranslate"><span class="pre">draw_markers()</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>draw</strong> (<em>PIL.ImageDraw.ImageDraw</em>) – Pillow ImageDraw object used to draw shapes and text.</p></li>
-<li><p><strong>marker_positions</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>str</em><em>, </em><em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em>) – Marker data produced by <a class="reference internal" href="#draw.draw_markers" title="draw.draw_markers"><code class="xref py py-func docutils literal notranslate"><span class="pre">draw_markers()</span></code></a>.</p></li>
-<li><p><strong>font</strong> (<em>PIL.ImageFont.ImageFont</em>) – Regular font for legend text.</p></li>
-<li><p><strong>font_bold</strong> (<em>PIL.ImageFont.ImageFont</em>) – Bold font for headings.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="draw.draw_markers">
-<span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_markers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageDraw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_bold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#draw.draw_markers" title="Link to this definition">¶</a></dt>
-<dd><p>Draw marker glyphs on the wheel and capture their metadata.</p>
-<p>Each entry in <code class="docutils literal notranslate"><span class="pre">marker_colors</span></code> may optionally supply a marker type
-(<code class="docutils literal notranslate"><span class="pre">&quot;circle&quot;</span></code> for palette colors or <code class="docutils literal notranslate"><span class="pre">&quot;cross&quot;</span></code> for alternates). When the
-style is omitted the function renders a circle to remain backward compatible.
-Labels are drawn next to the marker: <code class="docutils literal notranslate"><span class="pre">N</span></code> for circles and <code class="docutils literal notranslate"><span class="pre">Nx</span></code> for crosses.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>draw</strong> (<em>PIL.ImageDraw.ImageDraw</em>) – Pillow ImageDraw surface used to render markers.</p></li>
-<li><p><strong>marker_colors</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>] </em><em>| </em><em>tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em>) – Tuples of <code class="docutils literal notranslate"><span class="pre">(name,</span> <span class="pre">hex[,</span> <span class="pre">marker_type])</span></code> to place on the wheel.</p></li>
-<li><p><strong>font_bold</strong> (<em>PIL.ImageFont.ImageFont</em>) – Bold font used for marker labels.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Marker metadata <code class="docutils literal notranslate"><span class="pre">(index,</span> <span class="pre">name,</span> <span class="pre">hex_color,</span> <span class="pre">rgb,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">marker_type)</span></code>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[tuple[int, str, str, tuple[int,int,int], int, int, str]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function" id="module-main">
-<dt class="sig sig-object py" id="main.generate_wheel_from_db">
-<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_wheel_from_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#main.generate_wheel_from_db" title="Link to this definition">¶</a></dt>
-<dd><p>Generate a color wheel image (PNG) based on inks in a database.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>db_url</strong> (<em>str</em>) – SQLAlchemy database URL or path to SQLite file.</p></li>
-<li><p><strong>output_file</strong> (<em>str</em>) – Filesystem path to write the generated PNG.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Path object pointing to the saved image.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pathlib.Path</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="main.main">
-<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.main" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="main.parse_args">
-<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.parse_args" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="main.setup_logging">
-<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'colorwheel.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#main.setup_logging" title="Link to this definition">¶</a></dt>
-<dd><p>Configure and return a dedicated logger based on verbose flag.</p>
-</dd></dl>
-
-<p id="module-ui">Textual-based interactive interface for data format conversion and color wheel output.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="ui.ConverterApp">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">ConverterApp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui.ConverterApp" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">App</span></code></p>
-<p>A simple UI to choose input/output formats and run conversion.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ui.ConverterApp.BINDINGS">
-<span class="sig-name descname"><span class="pre">BINDINGS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('q',</span> <span class="pre">'quit',</span> <span class="pre">'Quit'),</span> <span class="pre">('ctrl+c',</span> <span class="pre">'quit',</span> <span class="pre">'Quit')]</span></span><a class="headerlink" href="#ui.ConverterApp.BINDINGS" title="Link to this definition">¶</a></dt>
-<dd><p>The default key bindings.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ui.ConverterApp.CSS">
-<span class="sig-name descname"><span class="pre">CSS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#ui.ConverterApp.CSS" title="Link to this definition">¶</a></dt>
-<dd><p>Inline CSS, useful for quick scripts. This is loaded after CSS_PATH,
-and therefore takes priority in the event of a specificity clash.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ui.ConverterApp.compose">
-<span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Widget</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ui.ConverterApp.compose" title="Link to this definition">¶</a></dt>
-<dd><p>Yield child widgets for a container.</p>
-<p>This method should be implemented in a subclass.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ui.ConverterApp.log_event">
-<span class="sig-name descname"><span class="pre">log_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui.ConverterApp.log_event" title="Link to this definition">¶</a></dt>
-<dd><p>Write message to console and log file.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ui.ConverterApp.on_button_pressed">
-<span class="sig-name descname"><span class="pre">on_button_pressed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Pressed</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui.ConverterApp.on_button_pressed" title="Link to this definition">¶</a></dt>
-<dd><p>Handle the Run button press.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ui.ConverterApp.on_mount">
-<span class="sig-name descname"><span class="pre">on_mount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui.ConverterApp.on_mount" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ui.ConverterApp.on_unmount">
-<span class="sig-name descname"><span class="pre">on_unmount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui.ConverterApp.on_unmount" title="Link to this definition">¶</a></dt>
-<dd><p>Close log file on exit.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui.init_cli">
-<span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">init_cli</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Logger</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ui.init_cli" title="Link to this definition">¶</a></dt>
-<dd><p>Parse CLI args and configure logger.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui.setup_logging">
-<span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#ui.setup_logging" title="Link to this definition">¶</a></dt>
-<dd><p>Configure and return a logger based on verbosity count.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui.verbosity_to_loglevel">
-<span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">verbosity_to_loglevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbosity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ui.verbosity_to_loglevel" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<p id="module-ui_converters">Conversion functions extracted from UI logic.
-Each function handles a specific input/output format pair.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.db_to_json">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">db_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.db_to_json" title="Link to this definition">¶</a></dt>
-<dd><p>Export database tables to JSON structure file.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.db_to_ods">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">db_to_ods</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.db_to_ods" title="Link to this definition">¶</a></dt>
-<dd><p>Save SQL DB file as ODS placeholder (noop copy).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.handle_conversion">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">handle_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_converters.handle_conversion" title="Link to this definition">¶</a></dt>
-<dd><p>Lookup and invoke the appropriate conversion handler.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.json_to_db">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">json_to_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.json_to_db" title="Link to this definition">¶</a></dt>
-<dd><p>Import JSON data to a fresh SQL DB file.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.json_to_ods">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">json_to_ods</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.json_to_ods" title="Link to this definition">¶</a></dt>
-<dd><p>Save JSON file as ODS placeholder (noop copy).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.json_to_png">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">json_to_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.json_to_png" title="Link to this definition">¶</a></dt>
-<dd><p>Render PNG from JSON ink list directly (no DB).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.ods_to_db">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">ods_to_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.ods_to_db" title="Link to this definition">¶</a></dt>
-<dd><p>Load ODS data into a fresh SQL DB file.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.ods_to_json">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">ods_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.ods_to_json" title="Link to this definition">¶</a></dt>
-<dd><p>Read ODS spreadsheet and export data to JSON file.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.ods_to_png">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">ods_to_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.ods_to_png" title="Link to this definition">¶</a></dt>
-<dd><p>Convert ODS file directly to PNG by staging a temp DB.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ui_converters.sql_to_png">
-<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">sql_to_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.sql_to_png" title="Link to this definition">¶</a></dt>
-<dd><p>Convert SQL DB file to PNG via wheel generator.</p>
-</dd></dl>
-
 <p id="module-orm">SQLAlchemy ORM for FountainPens, Inks, and PenSetups.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="orm.FountainPen">
@@ -845,6 +771,568 @@ db_url: Database URL (e.g., ‘sqlite:///pens.db’).</p>
 </dl>
 </dd></dl>
 
+<p id="module-color_name_api">Color name lookup via the Color.pizza API.</p>
+<p>Uses the public endpoint documented at <a class="reference external" href="https://api.color.pizza/v1/">https://api.color.pizza/v1/</a>?values=&lt;HEX&gt;.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="color_name_api.get_color_name_from_api">
+<span class="sig-prename descclassname"><span class="pre">color_name_api.</span></span><span class="sig-name descname"><span class="pre">get_color_name_from_api</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#color_name_api.get_color_name_from_api" title="Link to this definition">¶</a></dt>
+<dd><p>Resolve a hex color to a human-readable name using Color.pizza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_color</strong> (<em>str</em>) – Color in <code class="docutils literal notranslate"><span class="pre">#RRGGBB</span></code> or <code class="docutils literal notranslate"><span class="pre">RRGGBB</span></code> format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The name reported by the API (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;Candy</span> <span class="pre">Green&quot;</span></code>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the API response is missing a color name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-draw">
+<span id="rendering"></span><h2>Rendering<a class="headerlink" href="#module-draw" title="Link to this heading">¶</a></h2>
+<p>This module provides functions to render a color wheel, annotate markers,
+and create a legend in the generated image.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="draw.draw_color_wheel">
+<span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_color_wheel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Image</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#draw.draw_color_wheel" title="Link to this definition">¶</a></dt>
+<dd><p>Draw the color wheel background on the provided image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>img</strong> (<em>PIL.Image.Image</em>) – PIL Image instance (mode ‘RGB’) to render the wheel onto.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="draw.draw_legend">
+<span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageDraw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_positions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_bold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#draw.draw_legend" title="Link to this definition">¶</a></dt>
+<dd><p>Draw a legend panel showing marker swatches and labels.</p>
+<p>The legend mirrors the marker list and annotates crosses with an <code class="docutils literal notranslate"><span class="pre">x</span></code> suffix
+(for closest-ink markers). Ordering and numbering follow the sequence returned
+by <a class="reference internal" href="#draw.draw_markers" title="draw.draw_markers"><code class="xref py py-func docutils literal notranslate"><span class="pre">draw_markers()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>draw</strong> (<em>PIL.ImageDraw.ImageDraw</em>) – Pillow ImageDraw object used to draw shapes and text.</p></li>
+<li><p><strong>marker_positions</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>str</em><em>, </em><em>tuple</em><em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>str</em><em>]</em><em>]</em>) – Marker data produced by <a class="reference internal" href="#draw.draw_markers" title="draw.draw_markers"><code class="xref py py-func docutils literal notranslate"><span class="pre">draw_markers()</span></code></a>.</p></li>
+<li><p><strong>font</strong> (<em>PIL.ImageFont.ImageFont</em>) – Regular font for legend text.</p></li>
+<li><p><strong>font_bold</strong> (<em>PIL.ImageFont.ImageFont</em>) – Bold font for headings.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="draw.draw_markers">
+<span class="sig-prename descclassname"><span class="pre">draw.</span></span><span class="sig-name descname"><span class="pre">draw_markers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">draw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageDraw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font_bold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImageFont</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#draw.draw_markers" title="Link to this definition">¶</a></dt>
+<dd><p>Draw marker glyphs on the wheel and capture their metadata.</p>
+<p>Each entry in <code class="docutils literal notranslate"><span class="pre">marker_colors</span></code> may optionally supply a marker type
+(<code class="docutils literal notranslate"><span class="pre">&quot;circle&quot;</span></code> for palette colors or <code class="docutils literal notranslate"><span class="pre">&quot;cross&quot;</span></code> for alternates). When the
+style is omitted the function renders a circle to remain backward compatible.
+Labels are drawn next to the marker: <code class="docutils literal notranslate"><span class="pre">N</span></code> for circles and <code class="docutils literal notranslate"><span class="pre">Nx</span></code> for crosses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>draw</strong> (<em>PIL.ImageDraw.ImageDraw</em>) – Pillow ImageDraw surface used to render markers.</p></li>
+<li><p><strong>marker_colors</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>] </em><em>| </em><em>tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em>) – Tuples of <code class="docutils literal notranslate"><span class="pre">(name,</span> <span class="pre">hex[,</span> <span class="pre">marker_type])</span></code> to place on the wheel.</p></li>
+<li><p><strong>font_bold</strong> (<em>PIL.ImageFont.ImageFont</em>) – Bold font used for marker labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Marker metadata <code class="docutils literal notranslate"><span class="pre">(index,</span> <span class="pre">name,</span> <span class="pre">hex_color,</span> <span class="pre">rgb,</span> <span class="pre">x,</span> <span class="pre">y,</span> <span class="pre">marker_type)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple[int, str, str, tuple[int,int,int], int, int, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ui_converters">
+<span id="ui-helpers"></span><h2>UI helpers<a class="headerlink" href="#module-ui_converters" title="Link to this heading">¶</a></h2>
+<p>Conversion functions extracted from UI logic.
+Each function handles a specific input/output format pair.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.db_to_json">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">db_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.db_to_json" title="Link to this definition">¶</a></dt>
+<dd><p>Export database tables to JSON structure file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.db_to_ods">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">db_to_ods</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.db_to_ods" title="Link to this definition">¶</a></dt>
+<dd><p>Save SQL DB file as ODS placeholder (noop copy).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.handle_conversion">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">handle_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_converters.handle_conversion" title="Link to this definition">¶</a></dt>
+<dd><p>Lookup and invoke the appropriate conversion handler.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.json_to_db">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">json_to_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.json_to_db" title="Link to this definition">¶</a></dt>
+<dd><p>Import JSON data to a fresh SQL DB file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.json_to_ods">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">json_to_ods</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.json_to_ods" title="Link to this definition">¶</a></dt>
+<dd><p>Save JSON file as ODS placeholder (noop copy).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.json_to_png">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">json_to_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.json_to_png" title="Link to this definition">¶</a></dt>
+<dd><p>Render PNG from JSON ink list directly (no DB).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.ods_to_db">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">ods_to_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.ods_to_db" title="Link to this definition">¶</a></dt>
+<dd><p>Load ODS data into a fresh SQL DB file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.ods_to_json">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">ods_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.ods_to_json" title="Link to this definition">¶</a></dt>
+<dd><p>Read ODS spreadsheet and export data to JSON file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.ods_to_png">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">ods_to_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.ods_to_png" title="Link to this definition">¶</a></dt>
+<dd><p>Convert ODS file directly to PNG by staging a temp DB.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_converters.sql_to_png">
+<span class="sig-prename descclassname"><span class="pre">ui_converters.</span></span><span class="sig-name descname"><span class="pre">sql_to_png</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_converters.sql_to_png" title="Link to this definition">¶</a></dt>
+<dd><p>Convert SQL DB file to PNG via wheel generator.</p>
+</dd></dl>
+
+<p id="module-ui">Textual-based interactive interface for data format conversion and color wheel output.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui.ConverterApp">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">ConverterApp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui.ConverterApp" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">App</span></code></p>
+<p>A simple UI to choose input/output formats and run conversion.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ui.ConverterApp.BINDINGS">
+<span class="sig-name descname"><span class="pre">BINDINGS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('q',</span> <span class="pre">'quit',</span> <span class="pre">'Quit'),</span> <span class="pre">('ctrl+c',</span> <span class="pre">'quit',</span> <span class="pre">'Quit')]</span></span><a class="headerlink" href="#ui.ConverterApp.BINDINGS" title="Link to this definition">¶</a></dt>
+<dd><p>The default key bindings.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ui.ConverterApp.CSS">
+<span class="sig-name descname"><span class="pre">CSS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#ui.ConverterApp.CSS" title="Link to this definition">¶</a></dt>
+<dd><p>Inline CSS, useful for quick scripts. This is loaded after CSS_PATH,
+and therefore takes priority in the event of a specificity clash.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.ConverterApp.compose">
+<span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Widget</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ui.ConverterApp.compose" title="Link to this definition">¶</a></dt>
+<dd><p>Yield child widgets for a container.</p>
+<p>This method should be implemented in a subclass.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.ConverterApp.log_event">
+<span class="sig-name descname"><span class="pre">log_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui.ConverterApp.log_event" title="Link to this definition">¶</a></dt>
+<dd><p>Write message to console and log file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.ConverterApp.on_button_pressed">
+<span class="sig-name descname"><span class="pre">on_button_pressed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Pressed</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui.ConverterApp.on_button_pressed" title="Link to this definition">¶</a></dt>
+<dd><p>Handle the Run button press.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.ConverterApp.on_mount">
+<span class="sig-name descname"><span class="pre">on_mount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui.ConverterApp.on_mount" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui.ConverterApp.on_unmount">
+<span class="sig-name descname"><span class="pre">on_unmount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui.ConverterApp.on_unmount" title="Link to this definition">¶</a></dt>
+<dd><p>Close log file on exit.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui.init_cli">
+<span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">init_cli</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Logger</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ui.init_cli" title="Link to this definition">¶</a></dt>
+<dd><p>Parse CLI args and configure logger.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui.setup_logging">
+<span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#ui.setup_logging" title="Link to this definition">¶</a></dt>
+<dd><p>Configure and return a logger based on verbosity count.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui.verbosity_to_loglevel">
+<span class="sig-prename descclassname"><span class="pre">ui.</span></span><span class="sig-name descname"><span class="pre">verbosity_to_loglevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbosity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ui.verbosity_to_loglevel" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-main">
+<span id="apps-and-entrypoints"></span><h2>Apps and entrypoints<a class="headerlink" href="#module-main" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="main.generate_wheel_from_db">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">generate_wheel_from_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#main.generate_wheel_from_db" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a color wheel image (PNG) based on inks in a database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_url</strong> (<em>str</em>) – SQLAlchemy database URL or path to SQLite file.</p></li>
+<li><p><strong>output_file</strong> (<em>str</em>) – Filesystem path to write the generated PNG.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path object pointing to the saved image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pathlib.Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.main">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.main" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.parse_args">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main.parse_args" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.setup_logging">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logfile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'colorwheel.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#main.setup_logging" title="Link to this definition">¶</a></dt>
+<dd><p>Configure and return a dedicated logger based on verbose flag.</p>
+</dd></dl>
+
+<section id="overview">
+<span id="module-color_palett_app"></span><h3>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h3>
+<p>This module powers the palette CLI. It exposes:</p>
+<ul class="simple">
+<li><p>Strategy dispatching against <a class="reference internal" href="#module-palette_generator" title="palette_generator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">palette_generator</span></code></a></p></li>
+<li><p>Utility helpers for logging and color distance calculations</p></li>
+<li><p>A simple <code class="docutils literal notranslate"><span class="pre">main</span></code> entry point used by the CLI</p></li>
+</ul>
+</section>
+<section id="palette-strategies">
+<h3>Palette Strategies<a class="headerlink" href="#palette-strategies" title="Link to this heading">¶</a></h3>
+<p>The following strategies are available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tetradic</span></code>: double complementary hues at 0°, 60°, 180°, 240°</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">square_scheme</span></code>: four hues at 90° intervals</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">split_complementary_accent</span></code>: two splits ±30° and a complementary accent</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">two_warm_two_cool</span></code>: pick two warm and two cool colors</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dominant_temperature_contrast</span></code>: two from the dominant temperature and two from the opposite</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value_ladder_accent</span></code>: three evenly spaced lightness values plus a high-saturation accent</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">oklch_sampling</span></code>: sample four hues at equal 90° steps in OKLCH space</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="color_palett_app.find_closest">
+<span class="sig-prename descclassname"><span class="pre">color_palett_app.</span></span><span class="sig-name descname"><span class="pre">find_closest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#color_palett_app.find_closest" title="Link to this definition">¶</a></dt>
+<dd><p>Find the candidate color closest to a target color in RGB space.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_palett_app.main">
+<span class="sig-prename descclassname"><span class="pre">color_palett_app.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#color_palett_app.main" title="Link to this definition">¶</a></dt>
+<dd><p>Entry point for the color palette application.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_palett_app.parse_args">
+<span class="sig-prename descclassname"><span class="pre">color_palett_app.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Namespace</span></span></span><a class="headerlink" href="#color_palett_app.parse_args" title="Link to this definition">¶</a></dt>
+<dd><p>Parse command-line arguments for the palette app.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="color_palett_app.setup_logging">
+<span class="sig-prename descclassname"><span class="pre">color_palett_app.</span></span><span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#color_palett_app.setup_logging" title="Link to this definition">¶</a></dt>
+<dd><p>Configure a simple logger based on verbosity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verbose</strong> (<em>int</em>) – verbosity count, &gt;=1 for DEBUG.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured logger.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-ui_color_palett_app">Textual-based interface to run <a class="reference internal" href="#module-color_palett_app" title="color_palett_app"><code class="xref py py-mod docutils literal notranslate"><span class="pre">color_palett_app</span></code></a> with a chosen base color and strategy.</p>
+<section id="id2">
+<h3>Overview<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>This UI lists available inks from an ODS file, allows picking a palette strategy,
+and logs the generated palette alongside the closest available inks (brand and name).</p>
+</section>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h3>
+<p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">ui_color_palett_app.py</span></code> for the interactive interface, or
+use <code class="docutils literal notranslate"><span class="pre">PaletteApp().run_test()</span></code> in tests for headless execution.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ui_color_palett_app.</span></span><span class="sig-name descname"><span class="pre">PaletteApp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ui_color_palett_app.PaletteApp" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">App</span></code></p>
+<p>UI for selecting a base color and palette strategy.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.BINDINGS">
+<span class="sig-name descname"><span class="pre">BINDINGS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Binding(key='q',</span> <span class="pre">action='quit',</span> <span class="pre">description='Quit',</span> <span class="pre">show=True,</span> <span class="pre">key_display=None,</span> <span class="pre">priority=True,</span> <span class="pre">tooltip='',</span> <span class="pre">id=None,</span> <span class="pre">system=False,</span> <span class="pre">group=None),</span> <span class="pre">Binding(key='ctrl+c',</span> <span class="pre">action='quit',</span> <span class="pre">description='Quit',</span> <span class="pre">show=True,</span> <span class="pre">key_display=None,</span> <span class="pre">priority=True,</span> <span class="pre">tooltip='',</span> <span class="pre">id=None,</span> <span class="pre">system=False,</span> <span class="pre">group=None),</span> <span class="pre">Binding(key='o',</span> <span class="pre">action='open_preview',</span> <span class="pre">description='Open</span> <span class="pre">Preview',</span> <span class="pre">show=True,</span> <span class="pre">key_display=None,</span> <span class="pre">priority=True,</span> <span class="pre">tooltip='',</span> <span class="pre">id=None,</span> <span class="pre">system=False,</span> <span class="pre">group=None),</span> <span class="pre">Binding(key='j',</span> <span class="pre">action='nav_down',</span> <span class="pre">description='Down',</span> <span class="pre">show=True,</span> <span class="pre">key_display=None,</span> <span class="pre">priority=False,</span> <span class="pre">tooltip='',</span> <span class="pre">id=None,</span> <span class="pre">system=False,</span> <span class="pre">group=None),</span> <span class="pre">Binding(key='k',</span> <span class="pre">action='nav_up',</span> <span class="pre">description='Up',</span> <span class="pre">show=True,</span> <span class="pre">key_display=None,</span> <span class="pre">priority=False,</span> <span class="pre">tooltip='',</span> <span class="pre">id=None,</span> <span class="pre">system=False,</span> <span class="pre">group=None)]</span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.BINDINGS" title="Link to this definition">¶</a></dt>
+<dd><p>The default key bindings.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.CSS">
+<span class="sig-name descname"><span class="pre">CSS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\n</span>&#160;&#160;&#160; <span class="pre">#bottom_panel</span> <span class="pre">{\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">height:</span> <span class="pre">1fr;\n</span>&#160;&#160;&#160; <span class="pre">}\n</span>&#160;&#160;&#160; <span class="pre">#logger_scroll</span> <span class="pre">{\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">width:</span> <span class="pre">2fr;\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">min-height:</span> <span class="pre">10;\n</span>&#160;&#160;&#160; <span class="pre">}\n</span>&#160;&#160;&#160; <span class="pre">#logger</span> <span class="pre">{\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">min-height:</span> <span class="pre">10;\n</span>&#160;&#160;&#160; <span class="pre">}\n</span>&#160;&#160;&#160; <span class="pre">#input_methods</span> <span class="pre">{\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">height:</span> <span class="pre">auto;\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">padding:</span> <span class="pre">1</span> <span class="pre">1;\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">min-height:</span> <span class="pre">3;\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">width:</span> <span class="pre">100%;\n</span>&#160;&#160;&#160; <span class="pre">}\n</span>&#160;&#160;&#160; <span class="pre">#input_methods</span> <span class="pre">&gt;</span> <span class="pre">*</span> <span class="pre">{\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">margin-right:</span> <span class="pre">1;\n</span>&#160;&#160;&#160; <span class="pre">}\n</span>&#160;&#160;&#160; <span class="pre">#palette_preview</span> <span class="pre">{\n</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">width:</span> <span class="pre">1fr;\n</span>&#160;&#160;&#160; <span class="pre">}\n</span>&#160;&#160;&#160; <span class="pre">'</span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.CSS" title="Link to this definition">¶</a></dt>
+<dd><p>Inline CSS, useful for quick scripts. This is loaded after CSS_PATH,
+and therefore takes priority in the event of a specificity clash.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.action_nav_down">
+<span class="sig-name descname"><span class="pre">action_nav_down</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.action_nav_down" title="Link to this definition">¶</a></dt>
+<dd><p>Keyboard binding to move selection/focus down (j).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.action_nav_up">
+<span class="sig-name descname"><span class="pre">action_nav_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.action_nav_up" title="Link to this definition">¶</a></dt>
+<dd><p>Keyboard binding to move selection/focus up (k).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.action_open_preview">
+<span class="sig-name descname"><span class="pre">action_open_preview</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.action_open_preview" title="Link to this definition">¶</a></dt>
+<dd><p>Keyboard binding to open the generated preview image.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.action_quit">
+<span class="sig-name descname"><span class="pre">action_quit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.action_quit" title="Link to this definition">¶</a></dt>
+<dd><p>Persist color name cache on quit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.compose">
+<span class="sig-name descname"><span class="pre">compose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Widget</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.compose" title="Link to this definition">¶</a></dt>
+<dd><p>Build the UI layout with inputs, strategy radio set, log, and preview pane.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.generate_palette">
+<span class="sig-name descname"><span class="pre">generate_palette</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.generate_palette" title="Link to this definition">¶</a></dt>
+<dd><p>Generate palette and pair each color with the closest available ink.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_color</strong> – Hex <code class="docutils literal notranslate"><span class="pre">#RRGGBB</span></code> base color.</p></li>
+<li><p><strong>strategy</strong> – Strategy name from <code class="docutils literal notranslate"><span class="pre">STRATEGIES</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tuples <code class="docutils literal notranslate"><span class="pre">(color,</span> <span class="pre">closest_available_hex)</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.handle_random_base">
+<span class="sig-name descname"><span class="pre">handle_random_base</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.handle_random_base" title="Link to this definition">¶</a></dt>
+<dd><p>Set base color to a random available ink.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.handle_run">
+<span class="sig-name descname"><span class="pre">handle_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.handle_run" title="Link to this definition">¶</a></dt>
+<dd><p>Generate the palette based on current selections.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.handle_use_selected">
+<span class="sig-name descname"><span class="pre">handle_use_selected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.handle_use_selected" title="Link to this definition">¶</a></dt>
+<dd><p>Use the currently highlighted ink from the list as base color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Logs guidance if no highlight is present.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.load_available_colors">
+<span class="sig-name descname"><span class="pre">load_available_colors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.load_available_colors" title="Link to this definition">¶</a></dt>
+<dd><p>Load inks from the ODS file to seed selection widgets.</p>
+<p>Populates <code class="docutils literal notranslate"><span class="pre">self.available_colors</span></code> and <code class="docutils literal notranslate"><span class="pre">self.hex_to_label</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.log_event">
+<span class="sig-name descname"><span class="pre">log_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.log_event" title="Link to this definition">¶</a></dt>
+<dd><p>Write message to on-screen log and log file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> – Text to log.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.normalize_base_color">
+<span class="sig-name descname"><span class="pre">normalize_base_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.normalize_base_color" title="Link to this definition">¶</a></dt>
+<dd><p>Ensure base color is <code class="docutils literal notranslate"><span class="pre">#RRGGBB</span></code> and validate basic length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw</strong> – User-entered base color string.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Normalized hex with leading <code class="docutils literal notranslate"><span class="pre">#</span></code>.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If empty or wrong length.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.on_button_pressed">
+<span class="sig-name descname"><span class="pre">on_button_pressed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Pressed</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.on_button_pressed" title="Link to this definition">¶</a></dt>
+<dd><p>Route button presses to handlers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.on_close">
+<span class="sig-name descname"><span class="pre">on_close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.on_close" title="Link to this definition">¶</a></dt>
+<dd><p>Handle close events (e.g., Ctrl+C, command palette) by exiting.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.on_key">
+<span class="sig-name descname"><span class="pre">on_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Key</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.on_key" title="Link to this definition">¶</a></dt>
+<dd><p>Handle key presses for quit shortcuts to ensure the app exits reliably.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> – Textual key event.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.on_mount">
+<span class="sig-name descname"><span class="pre">on_mount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.on_mount" title="Link to this definition">¶</a></dt>
+<dd><p>Open log file, cache log widget, and prime the base input.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.on_option_list_option_selected">
+<span class="sig-name descname"><span class="pre">on_option_list_option_selected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">OptionSelected</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.on_option_list_option_selected" title="Link to this definition">¶</a></dt>
+<dd><p>Populate the base color input when an ink is chosen from the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> – Textual OptionSelected event.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.on_unmount">
+<span class="sig-name descname"><span class="pre">on_unmount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.on_unmount" title="Link to this definition">¶</a></dt>
+<dd><p>Close log file and persist color-name cache on exit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.open_preview_image">
+<span class="sig-name descname"><span class="pre">open_preview_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.open_preview_image" title="Link to this definition">¶</a></dt>
+<dd><p>Open the generated preview PNG using the OS default viewer (macOS: <code class="docutils literal notranslate"><span class="pre">open</span></code>).</p>
+<p>Falls back to logging an error if the preview file is missing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ui_color_palett_app.PaletteApp.render_palette_preview">
+<span class="sig-name descname"><span class="pre">render_palette_preview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">palette</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ui_color_palett_app.PaletteApp.render_palette_preview" title="Link to this definition">¶</a></dt>
+<dd><p>Render the palette preview PNG using the drawing helpers.</p>
+<p>The preview shows only the four generated palette colors (circle markers)
+and their corresponding closest available inks (cross markers). The legend
+mirrors this ordering, labeling palette colors as <code class="docutils literal notranslate"><span class="pre">N.</span></code> and closest inks
+as <code class="docutils literal notranslate"><span class="pre">Nx</span></code> for clarity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>palette</strong> – List of <code class="docutils literal notranslate"><span class="pre">(color,</span> <span class="pre">closest)</span></code> tuples.</p></li>
+<li><p><strong>out_path</strong> – Optional override path for the preview PNG.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_color_palett_app.init_cli">
+<span class="sig-prename descclassname"><span class="pre">ui_color_palett_app.</span></span><span class="sig-name descname"><span class="pre">init_cli</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#ui_color_palett_app.init_cli" title="Link to this definition">¶</a></dt>
+<dd><p>Parse CLI args and configure logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Logger configured according to CLI flags.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_color_palett_app.setup_logging">
+<span class="sig-prename descclassname"><span class="pre">ui_color_palett_app.</span></span><span class="sig-name descname"><span class="pre">setup_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Logger</span></span></span><a class="headerlink" href="#ui_color_palett_app.setup_logging" title="Link to this definition">¶</a></dt>
+<dd><p>Configure and return a logger based on verbosity count.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verbose</strong> – Count of <code class="docutils literal notranslate"><span class="pre">-v</span></code> flags.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Configured logger instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ui_color_palett_app.verbosity_to_loglevel">
+<span class="sig-prename descclassname"><span class="pre">ui_color_palett_app.</span></span><span class="sig-name descname"><span class="pre">verbosity_to_loglevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbosity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#ui_color_palett_app.verbosity_to_loglevel" title="Link to this definition">¶</a></dt>
+<dd><p>Map verbosity count to logging levels.</p>
+<ul class="simple">
+<li><p>0 -&gt; ERROR</p></li>
+<li><p>1 -&gt; WARNING</p></li>
+<li><p>2 -&gt; INFO</p></li>
+<li><p>&gt;=3 -&gt; DEBUG</p></li>
+</ul>
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -878,49 +1366,11 @@ db_url: Database URL (e.g., ‘sqlite:///pens.db’).</p>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ui.html">User Interfaces</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Module Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.format_hex_with_name"><code class="docutils literal notranslate"><span class="pre">format_hex_with_name()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.hex_to_color_name"><code class="docutils literal notranslate"><span class="pre">hex_to_color_name()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.hex_to_rgb"><code class="docutils literal notranslate"><span class="pre">hex_to_rgb()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.hex_to_rgbf"><code class="docutils literal notranslate"><span class="pre">hex_to_rgbf()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.hsl_to_rgb"><code class="docutils literal notranslate"><span class="pre">hsl_to_rgb()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.hsv_to_xy"><code class="docutils literal notranslate"><span class="pre">hsv_to_xy()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.load_color_name_cache"><code class="docutils literal notranslate"><span class="pre">load_color_name_cache()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.oklab_to_rgb"><code class="docutils literal notranslate"><span class="pre">oklab_to_rgb()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hex"><code class="docutils literal notranslate"><span class="pre">rgb_to_hex()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hsl"><code class="docutils literal notranslate"><span class="pre">rgb_to_hsl()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_hsv"><code class="docutils literal notranslate"><span class="pre">rgb_to_hsv()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.rgb_to_oklab"><code class="docutils literal notranslate"><span class="pre">rgb_to_oklab()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color_utils.save_color_name_cache"><code class="docutils literal notranslate"><span class="pre">save_color_name_cache()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data_reader.DataReader"><code class="docutils literal notranslate"><span class="pre">DataReader</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data_reader.FountainPen"><code class="docutils literal notranslate"><span class="pre">FountainPen</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data_reader.Ink"><code class="docutils literal notranslate"><span class="pre">Ink</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data_reader.PenSetup"><code class="docutils literal notranslate"><span class="pre">PenSetup</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#draw.draw_color_wheel"><code class="docutils literal notranslate"><span class="pre">draw_color_wheel()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#draw.draw_legend"><code class="docutils literal notranslate"><span class="pre">draw_legend()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#draw.draw_markers"><code class="docutils literal notranslate"><span class="pre">draw_markers()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#main.generate_wheel_from_db"><code class="docutils literal notranslate"><span class="pre">generate_wheel_from_db()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#main.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#main.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#main.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui.ConverterApp"><code class="docutils literal notranslate"><span class="pre">ConverterApp</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui.init_cli"><code class="docutils literal notranslate"><span class="pre">init_cli()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui.setup_logging"><code class="docutils literal notranslate"><span class="pre">setup_logging()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui.verbosity_to_loglevel"><code class="docutils literal notranslate"><span class="pre">verbosity_to_loglevel()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.db_to_json"><code class="docutils literal notranslate"><span class="pre">db_to_json()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.db_to_ods"><code class="docutils literal notranslate"><span class="pre">db_to_ods()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.handle_conversion"><code class="docutils literal notranslate"><span class="pre">handle_conversion()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.json_to_db"><code class="docutils literal notranslate"><span class="pre">json_to_db()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.json_to_ods"><code class="docutils literal notranslate"><span class="pre">json_to_ods()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.json_to_png"><code class="docutils literal notranslate"><span class="pre">json_to_png()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.ods_to_db"><code class="docutils literal notranslate"><span class="pre">ods_to_db()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.ods_to_json"><code class="docutils literal notranslate"><span class="pre">ods_to_json()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.ods_to_png"><code class="docutils literal notranslate"><span class="pre">ods_to_png()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ui_converters.sql_to_png"><code class="docutils literal notranslate"><span class="pre">sql_to_png()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#orm.FountainPen"><code class="docutils literal notranslate"><span class="pre">FountainPen</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#orm.Ink"><code class="docutils literal notranslate"><span class="pre">Ink</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#orm.PenSetup"><code class="docutils literal notranslate"><span class="pre">PenSetup</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#orm.init_db"><code class="docutils literal notranslate"><span class="pre">init_db()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#orm.load_data_from_ods"><code class="docutils literal notranslate"><span class="pre">load_data_from_ods()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-color_utils">Core utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-data_reader">Data and persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-draw">Rendering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ui_converters">UI helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-main">Apps and entrypoints</a></li>
 </ul>
 </li>
 </ul>

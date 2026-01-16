@@ -1,5 +1,6 @@
 """
 .. module:: config_loader
+   :noindex:
    :synopsis: Configuration loader for project-wide settings.
 
 Configuration is read from ``config.toml`` located beside this module. If the file
