@@ -23,7 +23,7 @@ from typing import Iterable
 from PIL import Image, ImageDraw, ImageFont
 from textual import events
 from textual.binding import Binding
-from textual.containers import Horizontal
+from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import (
     Button,
     Footer,
@@ -135,14 +135,29 @@ class PaletteApp(App):
         Binding("q", "quit", "Quit", priority=True),
         Binding("ctrl+c", "quit", "Quit", priority=True),
         Binding("o", "open_preview", "Open Preview", priority=True),
+        Binding("j", "nav_down", "Down"),
+        Binding("k", "nav_up", "Up"),
     ]
 
     CSS = """
     #bottom_panel {
         height: 1fr;
     }
-    #logger {
+    #logger_scroll {
         width: 2fr;
+        min-height: 10;
+    }
+    #logger {
+        min-height: 10;
+    }
+    #input_methods {
+        height: auto;
+        padding: 1 1;
+        min-height: 3;
+        width: 100%;
+    }
+    #input_methods > * {
+        margin-right: 1;
     }
     #palette_preview {
         width: 1fr;
@@ -189,11 +204,6 @@ class PaletteApp(App):
         """
         logger.debug("compose() start")
         yield Header(show_clock=True)
-        yield Static(f"Using ODS palette source: {ODS_PATH}", id="ods_hint")
-        yield Static("Enter or choose a base color:", id="label_base")
-        yield Input(placeholder="#ff0000", id="base_input")
-        yield Button("Use highlighted ink", id="use_selected")
-        yield Button("Random available color", id="random_base")
         yield Static("Available inks (Enter to pick):", id="label_available")
         if self.available_colors:
             options: Iterable[Option] = (
@@ -209,8 +219,15 @@ class PaletteApp(App):
                 yield RadioButton(strat, id=f"strategy_{strat}", value=(idx == 0))
         yield Button("Generate palette", id="run")
         with Horizontal(id="bottom_panel"):
-            yield Log(id="logger", highlight=False)
+            with VerticalScroll(id="logger_scroll"):
+                yield Log(id="logger", highlight=False)
             yield Static("Palette preview not generated yet.", id="palette_preview")
+        with Horizontal(id="input_methods"):
+            yield Static("Enter or choose a base color:", id="label_base")
+            yield Input(placeholder="#ff0000", id="base_input")
+            yield Button("Use highlighted ink", id="use_selected")
+            yield Button("Random available color", id="random_base")
+            yield Static(f"Using ODS palette source: {ODS_PATH}", id="ods_hint")
         yield Button("Open preview", id="open_preview")
         yield Footer()
 
@@ -263,6 +280,16 @@ class PaletteApp(App):
         if event.key in ("q", "ctrl+c"):
             event.stop()
             self.action_quit()
+
+    def action_nav_down(self) -> None:
+        """Keyboard binding to move selection/focus down (j)."""
+        logger.debug("action_nav_down triggered (j)")
+        self._handle_navigation(1)
+
+    def action_nav_up(self) -> None:
+        """Keyboard binding to move selection/focus up (k)."""
+        logger.debug("action_nav_up triggered (k)")
+        self._handle_navigation(-1)
 
     def log_event(self, message: str) -> None:
         """
@@ -326,6 +353,71 @@ class PaletteApp(App):
         if " (#" in label:
             return label.split(" (#", 1)[0]
         return label
+
+    def _move_strategy_selection(self, direction: int) -> None:
+        """
+        Move the selected strategy radio button up/down by ``direction``.
+
+        :param direction: +1 to move down, -1 to move up.
+        """
+        buttons = list(self.query("#strategies RadioButton"))
+        if not buttons:
+            return
+        current_idx = next((i for i, btn in enumerate(buttons) if btn.value), 0)
+        new_idx = max(0, min(len(buttons) - 1, current_idx + direction))
+        if new_idx == current_idx:
+            return
+        for btn in buttons:
+            btn.value = False
+        buttons[new_idx].value = True
+        logger.debug(
+            "Strategy selection moved from %s to %s",
+            buttons[current_idx].id,
+            buttons[new_idx].id,
+        )
+
+    def _handle_navigation(self, direction: int) -> None:
+        """
+        Move focus/selection using vim-style navigation.
+
+        :param direction: +1 for down, -1 for up.
+        """
+        focused = self.focused
+        logger.debug(
+            "Handling navigation direction=%s focused=%s",
+            direction,
+            getattr(focused, "id", type(focused).__name__),
+        )
+        if isinstance(focused, OptionList):
+            if direction > 0:
+                focused.action_cursor_down()
+            else:
+                focused.action_cursor_up()
+            logger.debug("OptionList cursor moved to index %s", focused.highlighted)
+            return
+        if (
+            isinstance(focused, RadioButton)
+            or getattr(focused, "id", "") == "strategies"
+        ):
+            self._move_strategy_selection(direction)
+            return
+        if isinstance(focused, Button):
+            self._cycle_focus(direction)
+            return
+        self._cycle_focus(direction)
+
+    def _cycle_focus(self, direction: int) -> None:
+        """Move focus forward/backward using Textual's focus helpers."""
+        focus_next = getattr(self.screen, "focus_next", None)
+        focus_previous = getattr(self.screen, "focus_previous", None)
+        if direction > 0 and callable(focus_next):
+            focus_next()
+            logger.debug("Focused next widget")
+        elif direction < 0 and callable(focus_previous):
+            focus_previous()
+            logger.debug("Focused previous widget")
+        else:
+            logger.debug("No focus change performed (missing focus helpers)")
 
     def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
         """

@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 import pytest
-from textual.widgets import Input, OptionList
+from textual.widgets import Input, OptionList, RadioButton
 
 from ui_color_palett_app import LOG_FILE, PaletteApp, init_cli
 
@@ -54,6 +54,14 @@ def sandbox_color_cache(monkeypatch, tmp_path):
         "ui_color_palett_app.PREVIEW_FILE",
         str(tmp_path / "generated_palette_color_wheel.png"),
     )
+
+
+@pytest.fixture(autouse=True)
+def sandbox_palette_log(monkeypatch, tmp_path):
+    """Isolate log file per worker/process when running in parallel."""
+    log_path = tmp_path / "colorwheel_palett_ui.log"
+    monkeypatch.setattr("ui_color_palett_app.LOG_FILE", str(log_path))
+    globals()["LOG_PATH"] = log_path
 
 
 @pytest.mark.parametrize(
@@ -141,7 +149,9 @@ def test_palette_ui_log_event_visible():
 
     lines = asyncio.run(run_case())
     assert any(
-        ("hello-log" in line.plain) if hasattr(line, "plain") else ("hello-log" in str(line))
+        ("hello-log" in line.plain)
+        if hasattr(line, "plain")
+        else ("hello-log" in str(line))
         for line in lines
     )
 
@@ -205,7 +215,7 @@ def test_palette_ui_use_selected_highlight_flow():
             option_list.highlighted = 0
             option = option_list.get_option_at_index(option_list.highlighted)
             expected_hex = option.id or option.prompt
-            await pilot.click("#use_selected")
+            pilot.app.query_one("#use_selected").press()
             await pilot.pause(0.2)
             base_value = pilot.app.query_one("#base_input", Input).value
         return expected_hex, base_value
@@ -243,6 +253,40 @@ def test_palette_ui_option_selected_event():
     ), "Option selection was not logged"
 
 
+async def _press_key(pilot, key: str):
+    """Helper to send key presses in headless tests."""
+    await pilot.press(key)
+    await pilot.pause(0.1)
+
+
+def test_palette_ui_jk_navigation():
+    """j/k keys move within available inks and strategy radios."""
+
+    async def run_case():
+        async with PaletteApp().run_test(size=TEST_SIZE) as pilot:
+            await pilot.pause(0.3)
+            option_list = pilot.app.query_one("#available_colors", OptionList)
+            option_list.focus()
+            await _press_key(pilot, "j")
+            assert option_list.highlighted == 1
+            await _press_key(pilot, "k")
+            assert option_list.highlighted == 0
+            # move to strategies and test radio movement
+            await pilot.click("#strategy_square_scheme")
+            await _press_key(pilot, "j")
+            selected = [
+                btn
+                for btn in pilot.app.query("#strategies RadioButton")
+                if btn.value is True
+            ]
+            assert selected, "No strategy selected after navigation"
+            names = [btn.id for btn in pilot.app.query("#strategies RadioButton")]
+            selected_idx = names.index(selected[0].id)
+            assert selected_idx >= names.index("strategy_square_scheme")
+
+    asyncio.run(run_case())
+
+
 def test_palette_ui_random_base(monkeypatch):
     """Random base should pick a random available color and log its label."""
 
@@ -251,7 +295,7 @@ def test_palette_ui_random_base(monkeypatch):
             await pilot.pause(0.3)
             target = pilot.app.available_colors[-1]
             monkeypatch.setattr("ui_color_palett_app.random.choice", lambda seq: target)
-            await pilot.click("#random_base")
+            pilot.app.query_one("#random_base").press()
             await pilot.pause(0.2)
             base_val = pilot.app.query_one("#base_input", Input).value
         return target, base_val
@@ -264,6 +308,39 @@ def test_palette_ui_random_base(monkeypatch):
         line == f"Random base color: {fmt_hex(expected_hex)} ({expected_label})"
         for line in log_lines
     ), "Random base selection not logged with label"
+
+
+def test_palette_ui_combined_navigation():
+    """Tab, arrows, and j/k should work together to move selection and focus."""
+
+    def _selected_strategy(app):
+        buttons = list(app.query("#strategies RadioButton"))
+        return next(btn.id for btn in buttons if btn.value)
+
+    async def run_case():
+        async with PaletteApp().run_test(size=TEST_SIZE) as pilot:
+            await pilot.pause(0.3)
+            option_list = pilot.app.query_one("#available_colors", OptionList)
+            option_list.focus()
+            # arrows and j/k advance/reverse the option list
+            await pilot.press("down")
+            await pilot.press("j")
+            assert option_list.highlighted == 2
+            await pilot.press("up")
+            await pilot.press("k")
+            assert option_list.highlighted == 0
+            # tab into strategies, then j moves selection down
+            await pilot.press("tab")
+            focused = pilot.app.focused
+            assert getattr(focused, "id", "") == "strategies" or isinstance(
+                focused, RadioButton
+            )
+            initial = _selected_strategy(pilot.app)
+            await pilot.press("j")
+            moved = _selected_strategy(pilot.app)
+            assert moved != initial
+
+    asyncio.run(run_case())
 
 
 def test_palette_ui_generates_preview_file(monkeypatch, tmp_path):
@@ -303,4 +380,4 @@ def test_palette_ui_update_preview_hint():
     assert "Updated preview text" in str(content)
 
 
-TEST_SIZE = (120, 80)
+TEST_SIZE = (220, 160)
